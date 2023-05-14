@@ -13,10 +13,20 @@ BlizzFaderDB = BlizzFaderDB or {}
 local options = {
     type = "group",
     name = ADDON_NAME,
+	order = 1,
     args = {
+	   
+	   opacityframe = {
+         type = "group",
+         name = "Frame Options",
+         guiInline = true,
+         order = 1,
+         args = {
+		 
         opacity = {
             type = "range",
             name = "Opacity",
+			order = 1,
             desc = "Set the visibility of frames outside of range",
             min = 0,
             max = 1,
@@ -28,7 +38,32 @@ local options = {
                 BlizzFaderDB.opacity = value
             end
         },
-    }
+	},
+	},
+	RangeClassCheck = {
+         type = "group",
+         name = "Range option",
+         guiInline = true,
+         order = 2,
+         args = {
+		 druidCheckButton = {
+            type = "toggle",
+            name = "Druid check",
+			order = 2,
+            desc = "Enable check for druid class",
+            get = function()
+                return BlizzFaderDB.druidCheckButton
+            end,
+            set = function(info, value)
+                BlizzFaderDB.druidCheckButton = value
+            end,
+            hidden = function()
+                return select(2, UnitClass("player")) ~= "DRUID"
+            end,
+		},
+	  },
+    },
+  },
 }
 
 -- Function to register options
@@ -85,15 +120,14 @@ local function UpdateFrames()
         local frame = frameList[i]
         local unit = unitList[i]
 		
-	
-		
         if frame and unit then
-		
             -- Determine if the player is enemy and in range
             if (UnitExists(unit) and not UnitIsDead(unit) and UnitCanAttack("player", unit)) then
-			 if select(2, UnitClass("player")) == "DRUID" then 
-                local inRange = IsSpellInRange(33786, unit) == 1
-			 
+                local inRange = true
+                if BlizzFaderDB.druidCheckButton and select(2, UnitClass("player")) == "DRUID" then 
+                    inRange = IsSpellInRange(33786, unit) == 1
+                end
+				
                 -- Fade out the frame if the player is out of range
                 if not inRange then
                     frame:SetAlpha(BlizzFaderDB.opacity)
@@ -101,15 +135,16 @@ local function UpdateFrames()
                     -- Fade in the frame if the player is in range
                     if frame:GetAlpha() < 0.8 then
                         frame:SetAlpha(1)
-						end
                     end
                 end
             end
 
             -- Determine if the player is friend and in range
             if (UnitExists(unit) and not UnitIsDead(unit) and UnitIsFriend("player", unit)) then
-			 if select(2, UnitClass("player")) == "DRUID" then 
-			   local inRange = IsSpellInRange(5185, unit) == 1
+                local inRange = true
+                if BlizzFaderDB.druidCheckButton and select(2, UnitClass("player")) == "DRUID" then 
+                    inRange = IsSpellInRange(5185, unit) == 1
+                end
 			 
                 -- Fade out the frame if the player is out of range
                 if not inRange then
@@ -118,7 +153,7 @@ local function UpdateFrames()
                     -- Fade in the frame if the player is in range
                     if frame:GetAlpha() < 0.8 then
                         frame:SetAlpha(1)
-						end
+						
                     end
                 end
             end
