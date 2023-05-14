@@ -1,17 +1,56 @@
-local opacity = 0.5 -- Set the visibility, 0 being invisible
-local rangeThreshold = 40 -- Set the range threshold in yards
+local ADDON_NAME = "BlizzFader"
+local ADDON_VERSION = 1
 
-local _G = _G
-local LibStub = LibStub or error("LibStub not found!")
-local BlizzFader = LibStub("AceAddon-3.0"):GetAddon("BlizzFader")
+-- Default BlizzFaderDB
+local defaultBlizzFaderDB = {
+    opacity = 0.5,
+}
 
-local L = BlizzFader.L
+-- Saved variables
+BlizzFaderDB = BlizzFaderDB or {}
 
-local partyTimer = 0
+-- Interface options
+local options = {
+    type = "group",
+    name = ADDON_NAME,
+    args = {
+        opacity = {
+            type = "range",
+            name = "Opacity",
+            desc = "Set the visibility of frames outside of range",
+            min = 0,
+            max = 1,
+            step = 0.1,
+            get = function()
+                return BlizzFaderDB.opacity
+            end,
+            set = function(info, value)
+                BlizzFaderDB.opacity = value
+            end
+        },
+    }
+}
+
+-- Function to register options
+local function RegisterOptions()
+    LibStub("AceConfig-3.0"):RegisterOptionsTable(ADDON_NAME, options)
+    LibStub("AceConfigDialog-3.0"):AddToBlizOptions(ADDON_NAME, ADDON_NAME)
+end
+
+-- Call function to register options
+RegisterOptions()
+
+-- Party frames and target frame
 local frameList = {}
 local unitList = {}
+
+-- Frame count
 local frameCount = 0
 
+-- Timer
+local partyTimer = 0
+
+-- Get frames
 local function GetFrames()
     -- Clear out the previous frame and unit lists
     wipe(frameList)
@@ -33,49 +72,60 @@ local function GetFrames()
         table.insert(frameList, targetFrame)
         table.insert(unitList, "target")
     end
-    
+
     -- Update the frame count
     frameCount = #frameList
 end
 
+
+
+-- Update frames
 local function UpdateFrames()
     for i = 1, frameCount do
         local frame = frameList[i]
         local unit = unitList[i]
-
-      if frame and unit then
+		
+	
+		
+        if frame and unit then
+		
             -- Determine if the player is enemy and in range
-         if UnitExists(unit) and not UnitIsDead(unit) and UnitCanAttack("player", unit) then
-			local inRange = IsSpellInRange(8921, unit) == 1
-			-- local inRange = IsSpellInRange(172, unit) == 1 warlock
-
-            -- Fade out the frame if the player is out of range
-            if not inRange then
-                frame:SetAlpha(opacity)
-            else
-                -- Fade in the frame if the player is in range
-                if frame:GetAlpha() < 0.8 then
-                    frame:SetAlpha(1)
+            if (UnitExists(unit) and not UnitIsDead(unit) and UnitCanAttack("player", unit)) then
+			 if select(2, UnitClass("player")) == "DRUID" then 
+                local inRange = IsSpellInRange(33786, unit) == 1
+			 
+                -- Fade out the frame if the player is out of range
+                if not inRange then
+                    frame:SetAlpha(BlizzFaderDB.opacity)
+                else
+                    -- Fade in the frame if the player is in range
+                    if frame:GetAlpha() < 0.8 then
+                        frame:SetAlpha(1)
+						end
+                    end
                 end
             end
-		end
-			
-		if UnitExists(unit) and not UnitIsDead(unit) and not (UnitCanAttack("player", unit)) or UnitIsFriend("player", unit) then
-			local inRange = IsSpellInRange(5185, unit) == 1
 
-            -- Fade out the frame if the player is out of range
-            if not inRange then
-                frame:SetAlpha(opacity)
-            else
-                -- Fade in the frame if the player is in range
-                if frame:GetAlpha() < 0.8 then
-                    frame:SetAlpha(1)
+            -- Determine if the player is friend and in range
+            if (UnitExists(unit) and not UnitIsDead(unit) and UnitIsFriend("player", unit)) then
+			 if select(2, UnitClass("player")) == "DRUID" then 
+			   local inRange = IsSpellInRange(5185, unit) == 1
+			 
+                -- Fade out the frame if the player is out of range
+                if not inRange then
+                    frame:SetAlpha(BlizzFaderDB.opacity)
+                else
+                    -- Fade in the frame if the player is in range
+                    if frame:GetAlpha() < 0.8 then
+                        frame:SetAlpha(1)
+						end
+                    end
                 end
             end
-		end
-      end
+        end
     end
 end
+
 
 local function OnUpdate(self, elapsed)
     partyTimer = partyTimer + elapsed
@@ -94,7 +144,7 @@ local function OnEvent(self, event, ...)
         else
             self:SetScript("OnUpdate", nil)
         end
-    elseif event == "PLAYER_TARGET_CHANGED" then
+elseif event == "PLAYER_TARGET_CHANGED" then
         GetFrames()
         UpdateFrames()
     end
@@ -105,39 +155,3 @@ frame:RegisterEvent("PLAYER_ENTERING_WORLD")
 frame:RegisterEvent("PARTY_MEMBERS_CHANGED")
 frame:RegisterEvent("PLAYER_TARGET_CHANGED")
 frame:SetScript("OnEvent", OnEvent)
-
-
-
--- Define the options table
-local options = {
-    name = "BlizzFader", -- Name of the addon
-    handler = BlizzFader, -- Handler object for the addon
-    type = "group",
-    args = {
-        alphaSlider = { -- Alpha slider
-            type = "range",
-            name = "Frame Alpha",
-            desc = "Set the alpha of the frame",
-            min = 0,
-            max = 1,
-            step = 0.05,
-            get = function(info) return BlizzFader.db.profile.frameAlpha end,
-            set = function(info, value) BlizzFader.db.profile.frameAlpha = value end,
-            order = 1,
-        },
-        showFrame = { -- Check button
-            type = "toggle",
-            name = "Show Frame",
-            desc = "Toggle the visibility of the frame",
-            get = function(info) return BlizzFader.db.profile.showFrame end,
-            set = function(info, value) BlizzFader.db.profile.showFrame = value end,
-            order = 2,
-        },
-    },
-}
-
--- Create a new options panel
-local optionsPanel = LibStub("AceConfigDialog-3.0"):AddToBlizOptions("BlizzFader")
-optionsPanel.default = function() BlizzFader.db:ResetProfile() end
-optionsPanel.refresh = function() BlizzFader:RefreshConfig() end
-optionsPanel.args = options.args
