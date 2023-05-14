@@ -25,7 +25,7 @@ local options = {
 		 
         opacity = {
             type = "range",
-            name = "Opacity",
+            name = "Fade Alpha,
 			order = 1,
             desc = "Set the visibility of frames outside of range",
             min = 0,
@@ -48,9 +48,9 @@ local options = {
          args = {
 		 druidCheckButton = {
             type = "toggle",
-            name = "Druid check",
+            name = "10m",
 			order = 2,
-            desc = "Enable check for druid class",
+            desc = "Set the range at 10m, based on insecte?",
             get = function()
                 return BlizzFaderDB.druidCheckButton
             end,
@@ -61,6 +61,21 @@ local options = {
                 return select(2, UnitClass("player")) ~= "DRUID"
             end,
 		},
+		druidCheckButton2 = {
+            type = "toggle",
+            name = "20m",
+			order = 2,
+            desc = "Set the range at 20m, based on spellname",
+            get = function()
+                return BlizzFaderDB.druidCheckButton2
+            end,
+            set = function(info, value)
+                BlizzFaderDB.druidCheckButton2 = value
+            end,
+            hidden = function()
+                return select(2, UnitClass("player")) ~= "DRUID"
+            end,
+		},		
 	  },
     },
   },
