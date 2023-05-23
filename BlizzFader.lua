@@ -25,7 +25,7 @@ local options = {
 		 
         opacity = {
             type = "range",
-            name = "Fade Alpha,
+            name = "Fade Alpha",
 			order = 1,
             desc = "Set the visibility of frames outside of range",
             min = 0,
@@ -70,9 +70,9 @@ local options = {
         return BlizzFaderDB.DruidEnemy
     end,
     set = function(info, value)
-        BlizzFaderDB.DruidEnemy = value; BlizzFader.UpdateFrames();
+        BlizzFaderDB.DruidEnemy = value;
     end,
-    values = {"40 meters [Soothe Animal] (lvl 22)", "30 meters [Wrath] (Nature's Reach: 33m, 36m)", "20 meters [Cyclone] (lvl 70 only)"},
+    values = {"40m [Soothe Animal] (lvl 22)", "30m [Wrath] (Nature's Reach: 33m, 36m)", "20m [Cyclone] (lvl 70 only)"},
     order = 2,
     hidden = function()
         return select(2, UnitClass("player")) ~= "DRUID"
@@ -86,9 +86,9 @@ local options = {
         return BlizzFaderDB.DruidFriendly
     end,
     set = function(info, value)
-        BlizzFaderDB.DruidFriendly = value; BlizzFader.UpdateFrames();
+        BlizzFaderDB.DruidFriendly = value;
     end,
-    values = {"40 meters [Healing Touch]", "30 meters [Mark of the Wild]"},
+    values = {"40m [Healing Touch]", "30m [Mark of the Wild]"},
     order = 2,
     hidden = function()
         return select(2, UnitClass("player")) ~= "DRUID"
@@ -103,7 +103,7 @@ local options = {
         return BlizzFaderDB.ShamanEnemy
     end,
     set = function(info, value)
-        BlizzFaderDB.ShamanEnemy = value; BlizzFader.UpdateFrames();
+        BlizzFaderDB.ShamanEnemy = value; UpdateFrames();
     end,
     values = {"30 meters [Lightning Bolt] (Storm Reach: 33m, 36m)", "30 meters [Purge] (lvl 12)", "20 meters [Earth Shock] (Gladiator Gloves: 25m)]"
     },
@@ -120,7 +120,7 @@ local options = {
         return BlizzFaderDB.ShamanFriendly
     end,
     set = function(info, value)
-        BlizzFaderDB.ShamanFriendly = value; BlizzFader.UpdateFrames();
+        BlizzFaderDB.ShamanFriendly = value; UpdateFrames();
     end,
     values = {"40 meters [Healing Wave]", "30 meters [Ancestral Spirit] (lvl 12)"
     },
@@ -154,7 +154,7 @@ local frameCount = 0
 local partyTimer = 0
 
 -- Get frames
-function BlizzFader.GetFrames()
+local function GetFrames()
     -- Clear out the previous frame and unit lists
     wipe(frameList)
     wipe(unitList)
@@ -183,7 +183,7 @@ end
 
 
 -- Update frames
-function BlizzFader.UpdateFrames()
+local function UpdateFrames()
     for i = 1, frameCount do
         local frame = frameList[i]
         local unit = unitList[i]
@@ -266,22 +266,22 @@ local function OnUpdate(self, elapsed)
     partyTimer = partyTimer + elapsed
     if partyTimer > 0.1 then
         partyTimer = 0
-        BlizzFader.GetFrames()
-        BlizzFader.UpdateFrames()
+        GetFrames()
+        UpdateFrames()
     end
 end
 
 local function OnEvent(self, event, ...)
     if event == "PLAYER_ENTERING_WORLD" or event == "PARTY_MEMBERS_CHANGED" then
-        BlizzFader.GetFrames()
+        GetFrames()
         if frameCount > 0 then
             self:SetScript("OnUpdate", OnUpdate)
         else
             self:SetScript("OnUpdate", nil)
         end
 elseif event == "PLAYER_TARGET_CHANGED" then
-        BlizzFader.GetFrames()
-        BlizzFader.UpdateFrames()
+        GetFrames()
+        UpdateFrames()
     end
 end
 
