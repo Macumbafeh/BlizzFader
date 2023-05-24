@@ -13,7 +13,7 @@ BlizzFaderDB = BlizzFaderDB or {}
 local options = {
     type = "group",
     name = ADDON_NAME,
-	order = 1,
+	
     args = {
 	   
 	   opacityframe = {
@@ -26,7 +26,7 @@ local options = {
         opacity = {
             type = "range",
             name = "Fade Alpha",
-			order = 1,
+			order = 2,
             desc = "Set the visibility of frames outside of range",
             min = 0,
             max = 1,
@@ -44,35 +44,27 @@ local options = {
          type = "group",
          name = "Range option",
          guiInline = true,
-         order = 2,
+         order = 1,
          args = {
-		 druidCheckButton = {
-            type = "toggle",
-            name = "10m",
-			order = 2,
-            desc = "Set the range at 10m, based on insecte?",
-            get = function()
-                return BlizzFaderDB.druidCheckButton
-            end,
-            set = function(info, value)
-                BlizzFaderDB.druidCheckButton = value
-            end,
-            hidden = function()
-                return select(2, UnitClass("player")) ~= "DRUID"
-            end,
-		},
+		 
 		
     DruidEnemy = {
     type = "select",
     name = "Harmful Spells",
     desc = "Set the range based on harmful spells",
     get = function()
+		if BlizzFaderDB.DruidEnemy == nil then
+            BlizzFaderDB.DruidEnemy = 2 -- Set the default index for the harmful spells
+        end
         return BlizzFaderDB.DruidEnemy
     end,
     set = function(info, value)
         BlizzFaderDB.DruidEnemy = value;
     end,
-    values = {"40m [Soothe Animal] (lvl 22)", "30m [Wrath] (Nature's Reach: 33m, 36m)", "20m [Cyclone] (lvl 70 only)"},
+    values = {
+	"|TInterface\\Icons\\Ability_Hunter_BeastSoothe:15:15|t 40m (lvl 22)", 
+	"|TInterface\\Icons\\Spell_Nature_AbolishMagic:15:15|t 30m (33m, 36m Nature's Reach)", 
+	"|TInterface\\Icons\\Spell_Nature_EarthBind:15:15|t 20m (lvl 70 only)"},
     order = 2,
     hidden = function()
         return select(2, UnitClass("player")) ~= "DRUID"
@@ -83,13 +75,19 @@ local options = {
     name = "Friendly Spells",
     desc = "Set the range based on friendly spells",
     get = function()
+		if BlizzFaderDB.DruidFriendly == nil then
+            BlizzFaderDB.DruidFriendly = 1 -- Set the default index for the friendly spells
+        end
         return BlizzFaderDB.DruidFriendly
     end,
     set = function(info, value)
         BlizzFaderDB.DruidFriendly = value;
     end,
-    values = {"40m [Healing Touch]", "30m [Mark of the Wild]"},
-    order = 2,
+    values = {
+        "|TInterface\\Icons\\Spell_Nature_HealingTouch:15:15|t 40m",
+        "|TInterface\\Icons\\Spell_Nature_Regeneration:15:15|t 30m"
+    },
+    order = 3,
     hidden = function()
         return select(2, UnitClass("player")) ~= "DRUID"
     end,
@@ -100,12 +98,17 @@ local options = {
     name = "Harmful Spells",
     desc = "Set the range based on harmful spells",
     get = function()
+		if BlizzFaderDB.ShamanEnemy == nil then
+            BlizzFaderDB.ShamanEnemy = 1 -- Set the default index for the friendly spells
+        end
         return BlizzFaderDB.ShamanEnemy
     end,
     set = function(info, value)
-        BlizzFaderDB.ShamanEnemy = value; UpdateFrames();
+        BlizzFaderDB.ShamanEnemy = value;
     end,
-    values = {"30 meters [Lightning Bolt] (Storm Reach: 33m, 36m)", "30 meters [Purge] (lvl 12)", "20 meters [Earth Shock] (Gladiator Gloves: 25m)]"
+    values = {"|TInterface\\Icons\\Spell_Nature_Lightning:15:15|t 30m (33m, 36m Storm Reach)", 
+	"|TInterface\\Icons\\Spell_Nature_Purge:15:15|t 30m (lvl 12)", 
+	"|TInterface\\Icons\\Spell_Nature_EarthShock:15:15|t 20m (25m Gladiator Gloves)]"
     },
     order = 2,
     hidden = function()
@@ -117,14 +120,18 @@ local options = {
     name = "Friendly Spells",
     desc = "Set the range based on friendly spells",
     get = function()
+		if BlizzFaderDB.ShamanFriendly == nil then
+            BlizzFaderDB.ShamanFriendly = 1 -- Set the default index for the friendly spells
+        end
         return BlizzFaderDB.ShamanFriendly
     end,
     set = function(info, value)
-        BlizzFaderDB.ShamanFriendly = value; UpdateFrames();
+        BlizzFaderDB.ShamanFriendly = value;
     end,
-    values = {"40 meters [Healing Wave]", "30 meters [Ancestral Spirit] (lvl 12)"
+    values = {"|TInterface\\Icons\\Spell_Nature_HealingWaveGreater:15:15|t 40m", 
+	"|TInterface\\Icons\\Spell_Nature_Regenerate:15:15|t 30m(lvl 12)"
     },
-    order = 2,
+    order = 3,
     hidden = function()
         return select(2, UnitClass("player")) ~= "SHAMAN"
     end,
@@ -189,8 +196,9 @@ local function UpdateFrames()
         local unit = unitList[i]
 		
         if frame and unit then
+			
             -- Determine if the player is enemy and in range
-            if (UnitExists(unit) and not UnitIsDead(unit) and UnitCanAttack("player", unit)) then
+            if (UnitExists(unit) and not UnitIsDead(unit) and not UnitIsDeadOrGhost(unit) and not UnitIsGhost(unit) and UnitIsConnected(unit) and UnitCanAttack("player", unit)) then
                 local inRange = true
                 -- [DRUID]
                 if BlizzFaderDB.DruidEnemy == 1 and select(2, UnitClass("player")) == "DRUID" then 
@@ -227,7 +235,7 @@ local function UpdateFrames()
             end
 
             -- Determine if the player is friend and in range
-            if (UnitExists(unit) and not UnitIsDead(unit) and UnitIsFriend("player", unit)) then
+            if (UnitExists(unit) and not UnitIsDead(unit) and not UnitIsDeadOrGhost(unit) and not UnitIsGhost(unit) and UnitIsConnected(unit) and UnitIsFriend("player", unit)) then
                 local inRange = true
                 -- [DRUID]
                 if BlizzFaderDB.DruidFriendly == 1 and select(2, UnitClass("player")) == "DRUID" then 
