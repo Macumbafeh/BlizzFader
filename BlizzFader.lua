@@ -34,6 +34,9 @@ local options = {
             max = 1,
             step = 0.1,
             get = function()
+				if BlizzFaderDB.opacity == 0 then
+				BlizzFaderDB.opacity = 0.5 -- Set the default index for the harmful spells
+				end
                 return BlizzFaderDB.opacity
             end,
             set = function(info, value)
@@ -46,6 +49,7 @@ local options = {
          type = "group",
          name = "Enemy target Range option",
          order = 2,
+		 guiInline = true,
          args = {
 		 
 		DisableEnemySpells = {
@@ -122,6 +126,7 @@ local options = {
          type = "group",
          name = "Friendly target and Party Range option",       
          order = 3,
+		 guiInline = true,
          args = {
 
     DisableFriendlySpells = {
