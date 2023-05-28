@@ -28,7 +28,7 @@ local options = {
         opacity = {
             type = "range",
             name = "Fade Alpha",
-			order = 2,
+			order = 1,
             desc = "Set the visibility of frames outside of range",
             min = 0,
             max = 1,
@@ -44,9 +44,8 @@ local options = {
 	},
 	RangeEnemy = {
          type = "group",
-         name = "Range option for Enemy target",
-         guiInline = true,
-         order = 1,
+         name = "Enemy target Range option",
+         order = 2,
          args = {
 		 
 		DisableEnemySpells = {
@@ -58,9 +57,8 @@ local options = {
     set = function(info, value)
         BlizzFaderDB.DisableEnemySpells = value
     end,
-    order = 2,
-    inline = false, -- Display as a separate line
-}
+    order = 0,
+},
 
      DruidEnemy = {
     type = "select",
@@ -79,14 +77,13 @@ local options = {
 	"|TInterface\\Icons\\Ability_Hunter_BeastSoothe:15:15|t 40m (lvl 22)", 
 	"|TInterface\\Icons\\Spell_Nature_AbolishMagic:15:15|t 30m (33m, 36m Nature's Reach)", 
 	"|TInterface\\Icons\\Spell_Nature_EarthBind:15:15|t 20m (lvl 70 only)"},
-    order = 3,
+    order = 1,
     hidden = function()
         return select(2, UnitClass("player")) ~= "DRUID"
     end,
     disabled = function()
         return BlizzFaderDB.DisableEnemySpells
     end,
-    inline = false, -- Display as a separate line
     },
 
 
@@ -106,16 +103,15 @@ local options = {
     values = {
     "|TInterface\\Icons\\Spell_Nature_Lightning:15:15|t 30m (33m, 36m Storm Reach)", 
 	"|TInterface\\Icons\\Spell_Nature_Purge:15:15|t 30m (lvl 12)", 
-	"|TInterface\\Icons\\Spell_Nature_EarthShock:15:15|t 20m (25m Gladiator Gloves)]"
+	"|TInterface\\Icons\\Spell_Nature_EarthShock:15:15|t 20m (25m Gladiator Gloves)]",
     },
-    order = 3,
+    order = 1,
     hidden = function()
         return select(2, UnitClass("player")) ~= "SHAMAN"
     end,
     disabled = function()
         return BlizzFaderDB.DisableEnemySpells
     end,
-    inline = false, -- Display as a separate line
     },
 
 	},
@@ -124,9 +120,8 @@ local options = {
 
    RangeFriendly = {
          type = "group",
-         name = "Range option for Friendly target and Party",
-         guiInline = true,
-         order = 1,
+         name = "Friendly target and Party Range option",       
+         order = 3,
          args = {
 
     DisableFriendlySpells = {
@@ -138,9 +133,8 @@ local options = {
     set = function(info, value)
         BlizzFaderDB.DisableFriendlySpells = value
     end,
-    order = 4,
-    inline = false, -- Display as a separate line
-}
+    order = 0,
+},
 
     DruidFriendly = {
     type = "select",
@@ -157,17 +151,15 @@ local options = {
     end,
     values = {
         "|TInterface\\Icons\\Spell_Nature_HealingTouch:15:15|t 40m",
-        "|TInterface\\Icons\\Spell_Nature_Regeneration:15:15|t 30m"
-        "|TInterface\\Icons\\Path de la croix:15:15|t Disable",
+        "|TInterface\\Icons\\Spell_Nature_Regeneration:15:15|t 30m",
     },
-    order = 5,
+    order = 1,
     hidden = function()
         return select(2, UnitClass("player")) ~= "DRUID"
     end,
     disabled = function()
         return BlizzFaderDB.DisableFriendlySpells
     end,
-    inline = false, -- Display as a separate line
     },
 
     ShamanFriendly = {
@@ -185,16 +177,15 @@ local options = {
     end,
     values = {
     "|TInterface\\Icons\\Spell_Nature_HealingWaveGreater:15:15|t 40m", 
-	"|TInterface\\Icons\\Spell_Nature_Regenerate:15:15|t 30m(lvl 12)"
+	"|TInterface\\Icons\\Spell_Nature_Regenerate:15:15|t 30m(lvl 12)",
     },
-    order = 5,
+    order = 1,
     hidden = function()
         return select(2, UnitClass("player")) ~= "SHAMAN"
     end,
     disabled = function()
         return BlizzFaderDB.DisableFriendlySpells
     end,
-    inline = false, -- Display as a separate line
     },
 	  },
     },
