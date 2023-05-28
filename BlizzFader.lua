@@ -42,9 +42,9 @@ local options = {
         },
 	},
 	},
-	RangeClassCheck = {
+	RangeEnemy = {
          type = "group",
-         name = "Range option",
+         name = "Range option for Enemy target",
          guiInline = true,
          order = 1,
          args = {
@@ -62,20 +62,7 @@ local options = {
     inline = false, -- Display as a separate line
 }
 
-DisableFriendlySpells = {
-    type = "toggle",
-    name = "Disable Friendly Spells",
-    get = function()
-        return BlizzFaderDB.DisableFriendlySpells
-    end,
-    set = function(info, value)
-        BlizzFaderDB.DisableFriendlySpells = value
-    end,
-    order = 4,
-    inline = false, -- Display as a separate line
-}
-
-    DruidEnemy = {
+     DruidEnemy = {
     type = "select",
     name = "Harmful Spells",
     desc = "Set the range based on harmful spells",
@@ -103,34 +90,6 @@ DisableFriendlySpells = {
     },
 
 
-    DruidFriendly = {
-    type = "select",
-    name = "Friendly Spells",
-    desc = "Set the range based on friendly spells",
-    get = function()
-		if BlizzFaderDB.DruidFriendly == nil then
-            BlizzFaderDB.DruidFriendly = 1 -- Set the default index for the friendly spells
-        end
-        return BlizzFaderDB.DruidFriendly
-    end,
-    set = function(info, value)
-        BlizzFaderDB.DruidFriendly = value;
-    end,
-    values = {
-        "|TInterface\\Icons\\Spell_Nature_HealingTouch:15:15|t 40m",
-        "|TInterface\\Icons\\Spell_Nature_Regeneration:15:15|t 30m"
-        "|TInterface\\Icons\\Path de la croix:15:15|t Disable",
-    },
-    order = 5,
-    hidden = function()
-        return select(2, UnitClass("player")) ~= "DRUID"
-    end,
-    disabled = function()
-        return BlizzFaderDB.DisableFriendlySpells
-    end,
-    inline = false, -- Display as a separate line
-    },
-    
     ShamanEnemy = {
     type = "select",
     name = "Harmful Spells",
@@ -159,6 +118,57 @@ DisableFriendlySpells = {
     inline = false, -- Display as a separate line
     },
 
+	},
+	},
+
+
+   RangeFriendly = {
+         type = "group",
+         name = "Range option for Friendly target and Party",
+         guiInline = true,
+         order = 1,
+         args = {
+
+    DisableFriendlySpells = {
+    type = "toggle",
+    name = "Disable Friendly Spells",
+    get = function()
+        return BlizzFaderDB.DisableFriendlySpells
+    end,
+    set = function(info, value)
+        BlizzFaderDB.DisableFriendlySpells = value
+    end,
+    order = 4,
+    inline = false, -- Display as a separate line
+}
+
+    DruidFriendly = {
+    type = "select",
+    name = "Friendly Spells",
+    desc = "Set the range based on friendly spells",
+    get = function()
+		if BlizzFaderDB.DruidFriendly == nil then
+            BlizzFaderDB.DruidFriendly = 1 -- Set the default index for the friendly spells
+        end
+        return BlizzFaderDB.DruidFriendly
+    end,
+    set = function(info, value)
+        BlizzFaderDB.DruidFriendly = value;
+    end,
+    values = {
+        "|TInterface\\Icons\\Spell_Nature_HealingTouch:15:15|t 40m",
+        "|TInterface\\Icons\\Spell_Nature_Regeneration:15:15|t 30m"
+        "|TInterface\\Icons\\Path de la croix:15:15|t Disable",
+    },
+    order = 5,
+    hidden = function()
+        return select(2, UnitClass("player")) ~= "DRUID"
+    end,
+    disabled = function()
+        return BlizzFaderDB.DisableFriendlySpells
+    end,
+    inline = false, -- Display as a separate line
+    },
 
     ShamanFriendly = {
     type = "select",
