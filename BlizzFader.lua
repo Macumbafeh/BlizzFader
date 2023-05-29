@@ -4,8 +4,6 @@ local ADDON_VERSION = 1
 -- Default BlizzFaderDB
 local defaultBlizzFaderDB = {
     opacity = 0.5,
-    DisableEnemySpells = true,
-    DisableFriendlySpells = true,
 }
 
 -- Saved variables
@@ -56,6 +54,9 @@ local options = {
     type = "toggle",
     name = "Disable Harmful Spells",
     get = function()
+		if BlizzFaderDB.DisableEnemySpells == nil then
+			BlizzFaderDB.DisableEnemySpells = false -- Set the default index for the harmful spells
+		end
         return BlizzFaderDB.DisableEnemySpells
     end,
     set = function(info, value)
@@ -118,6 +119,43 @@ local options = {
     end,
     },
 
+
+	WarlockEnemy = {
+    type = "select",
+    name = "Harmful Spells",
+    desc = "Set the range based on harmful spells",
+    get = function()
+		if BlizzFaderDB.WarlockEnemy == nil then
+            BlizzFaderDB.WarlockEnemy = 1 -- Set the default index for the friendly spells
+        end
+        return BlizzFaderDB.WarlockEnemy
+    end,
+    set = function(info, value)
+        BlizzFaderDB.WarlockEnemy = value;
+    end,
+    values = {
+    -- Immolate
+    "|TInterface\\Icons\\Spell_Fire_Immolation:15:15|t 30m (33m, 36m Destructive Reach)",
+    -- Corruption
+	  "|TInterface\\Icons\\Spell_Shadow_AbominationExplosion:15:15|t 30m (lvl 4, 33m, 36m Grim Reach)", 
+	  -- Shoot
+	 "|TInterface\\Icons\\Ability_ShootWand:15:15|t 30m", 
+	 -- Fear
+	 "|TInterface\\Icons\\Spell_Shadow_Possession:15:15|t 20m (lvl 8, 22m, 24m Grim Reach)",
+   -- Shadowburn
+   "|TInterface\\Icons\\Spell_Shadow_ScourgeBuild:15:15|t 20m (lvl 20, 22m, 24m Destructive Reach)", 
+    },
+    order = 1,
+    hidden = function()
+        return select(2, UnitClass("player")) ~= "WARLOCK"
+    end,
+	disabled = function()
+        return BlizzFaderDB.DisableEnemySpells
+    end,
+	
+	
+	
+    },
 	},
 	},
 
@@ -133,6 +171,9 @@ local options = {
     type = "toggle",
     name = "Disable Friendly Spells",
     get = function()
+		if BlizzFaderDB.DisableFriendlySpells == nil then
+			BlizzFaderDB.DisableFriendlySpells = false -- Set the default index for the harmful spells
+		end
         return BlizzFaderDB.DisableFriendlySpells
     end,
     set = function(info, value)
@@ -192,6 +233,63 @@ local options = {
         return BlizzFaderDB.DisableFriendlySpells
     end,
     },
+	
+	MageFriendly = {
+    type = "select",
+    name = "Friendly Spells",
+    desc = "Set the range based on friendly spells",
+    get = function()
+		if BlizzFaderDB.MageFriendly == nil then
+            BlizzFaderDB.MageFriendly = 2 -- Set the default index for the friendly spells
+        end
+        return BlizzFaderDB.MageFriendly
+    end,
+    set = function(info, value)
+        BlizzFaderDB.MageFriendly = value;
+    end,
+    values = {
+    -- Arcane Brilliance
+    "|TInterface\\Icons\\Spell_Holy_ArcaneIntellect:15:15|t 40m (lvl 56)",
+     -- Arcane Intellect
+	"|TInterface\\Icons\\Spell_Holy_MagicalSentry:15:15|t 30m"
+    },
+    order = 1,
+    hidden = function()
+        return select(2, UnitClass("player")) ~= "MAGE"
+    end,
+	 disabled = function()
+        return BlizzFaderDB.DisableFriendlySpells
+    end,
+    },
+	
+	
+	WarlockFriendly = {
+    type = "select",
+    name = "Friendly Spells",
+    desc = "Set the range based on friendly spells",
+    get = function()
+		if BlizzFaderDB.WarlockFriendly == nil then
+            BlizzFaderDB.WarlockFriendly = 1 -- Set the default index for the friendly spells
+        end
+        return BlizzFaderDB.WarlockFriendly
+    end,
+    set = function(info, value)
+        BlizzFaderDB.WarlockFriendly = value;
+    end,
+    values = {
+    -- Unending Breath
+    "|TInterface\\Icons\\Spell_Shadow_DemonBreath:15:15|t 30m (lvl 16)",
+    },
+    order = 1,
+    hidden = function()
+        return select(2, UnitClass("player")) ~= "WARLOCK"
+    end,
+	disabled = function()
+        return BlizzFaderDB.DisableFriendlySpells
+    end,
+    },
+	
+	
 	  },
     },
   },
@@ -278,6 +376,48 @@ local function UpdateFrames()
                 elseif BlizzFaderDB.ShamanEnemy == 3 and select(2, UnitClass("player")) == "SHAMAN" then 
                     -- Earth Shock
                     inRange = IsSpellInRange(8042, unit) == 1
+					
+				
+				-- [MAGE]
+                elseif BlizzFaderDB.MageEnemy == 1 and select(2, UnitClass("player")) == "MAGE" then 
+                    -- Fireball 
+                    inRange = IsSpellInRange(133, unit) == 1
+                elseif BlizzFaderDB.MageEnemy == 2 and select(2, UnitClass("player")) == "MAGE" then 
+                    -- Frost Bolt
+                    inRange = IsSpellInRange(116, unit) == 1
+                elseif BlizzFaderDB.MageEnemy == 3 and select(2, UnitClass("player")) == "MAGE" then 
+                    -- Scorch
+                    inRange = IsSpellInRange(2948, unit) == 1
+                elseif BlizzFaderDB.MageEnemy == 4 and select(2, UnitClass("player")) == "MAGE" then 
+                    -- Shoot
+                    inRange = IsSpellInRange(5019, unit) == 1
+                elseif BlizzFaderDB.MageEnemy == 5 and select(2, UnitClass("player")) == "MAGE" then 
+                    -- Fire Blast
+                    inRange = IsSpellInRange(2136, unit) == 1
+					
+				
+				-- [WARLOCK]
+                elseif BlizzFaderDB.WarlockEnemy == 1 and select(2, UnitClass("player")) == "WARLOCK" then 
+                    -- Immolate 
+                    inRange = IsSpellInRange(348, unit) == 1
+                elseif BlizzFaderDB.WarlockEnemy == 2 and select(2, UnitClass("player")) == "WARLOCK" then 
+                    -- Corruption
+                    inRange = IsSpellInRange(172, unit) == 1
+                elseif BlizzFaderDB.WarlockEnemy == 3 and select(2, UnitClass("player")) == "WARLOCK" then 
+                    -- Shoot
+                    inRange = IsSpellInRange(5019, unit) == 1
+                elseif BlizzFaderDB.WarlockEnemy == 4 and select(2, UnitClass("player")) == "WARLOCK" then 
+                    -- Fear
+                    inRange = IsSpellInRange(5782, unit) == 1
+                elseif BlizzFaderDB.WarlockEnemy == 5 and select(2, UnitClass("player")) == "WARLOCK" then 
+                    -- Shadowburn 
+                    if IsSpellInRange(17877) then
+						inRange = IsSpellInRange(17877, unit) == 1
+					else
+						inRange = true
+					end
+				
+				
                     end
                 -- Fade out the frame if the player is out of range
                 if not inRange then
@@ -301,13 +441,35 @@ local function UpdateFrames()
                     -- Mark of the Wild
                     inRange = IsSpellInRange(1126, unit) == 1
 
-                    -- [SHAMAN]
+
+                -- [SHAMAN]
                elseif BlizzFaderDB.DruidFriendly == 1 and select(2, UnitClass("player")) == "SHAMAN" then
                     -- Healing Wave
                     inRange = IsSpellInRange(331, unit) == 1
-                elseif BlizzFaderDB.DruidFriendly == 2 and select(2, UnitClass("player")) == "SHAMAN" then
+               elseif BlizzFaderDB.DruidFriendly == 2 and select(2, UnitClass("player")) == "SHAMAN" then
                     -- Ancestral Spirit
                     inRange = IsSpellInRange(2008, unit) == 1
+					
+					
+				-- [MAGE]
+               elseif BlizzFaderDB.MageFriendly == 1 and select(2, UnitClass("player")) == "MAGE" then
+                    -- Arcane Brilliance
+                    inRange = IsSpellInRange(23028, unit) == 1
+               elseif BlizzFaderDB.MageFriendly == 2 and select(2, UnitClass("player")) == "MAGE" then
+                    -- Arcane Intellect
+                    inRange = IsSpellInRange(1459, unit) == 1
+				
+
+				-- [WARLOCK]
+               elseif BlizzFaderDB.WarlockFriendly == 1 and select(2, UnitClass("player")) == "WARLOCK" then
+                    -- Unending Breath
+                    if IsSpellInRange(5697) then
+						inRange = IsSpellInRange(5697, unit) == 1
+					else
+						inRange = true
+					end
+					
+					
                 end
 			 
                 -- Fade out the frame if the player is out of range
