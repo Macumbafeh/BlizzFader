@@ -120,6 +120,41 @@ local options = {
     },
 
 
+	MageEnemy = {
+    type = "select",
+    name = "Harmful Spells",
+    desc = "Set the range based on harmful spells",
+    get = function()
+		if BlizzFaderDB.MageEnemy == nil then
+            BlizzFaderDB.MageEnemy = 1 -- Set the default index for the friendly spells
+        end
+        return BlizzFaderDB.MageEnemy
+    end,
+    set = function(info, value)
+        BlizzFaderDB.MageEnemy = value;
+    end,
+    values = {
+    -- Fireball
+    "|TInterface\\Icons\\Spell_Fire_FlameBolt:15:15|t 35m (38m, 41m Flame Throwing)",
+    -- Frost Bolt 
+	  "|TInterface\\Icons\\Spell_Frost_FrostBolt02:15:15|t 30m (lvl 4, 33m, 36m Arctic Reach)", 
+	  -- Scorch
+	 "|TInterface\\Icons\\Spell_Fire_SoulBurn:15:15|t 30m (lvl 22, 33m, 36m Flame Throwing)",
+	  -- Shoot
+	 "|TInterface\\Icons\\Ability_ShootWand:15:15|t 30m", 
+	  -- Fire Blast
+	  "|TInterface\\Icons\\Spell_Fire_Fireball:15:15|t 20m (lvl 6, 23m, 26m Flame Throwing)", 
+    },
+    order = 1,
+    hidden = function()
+        return select(2, UnitClass("player")) ~= "MAGE"
+    end,
+	 disabled = function()
+        return BlizzFaderDB.DisableEnemySpells
+    end,
+    },
+	
+
 	WarlockEnemy = {
     type = "select",
     name = "Harmful Spells",
