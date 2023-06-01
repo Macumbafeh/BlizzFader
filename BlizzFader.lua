@@ -21,14 +21,14 @@ local options = {
          name = "Frame Options",
          inline = true,
          order = 1,
-         width = "full",
+        width = "full",
          args = {
 		 
         opacity = {
             type = "range",
             name = "Fade Alpha",
 			order = 1,
-			width = "full",
+			-- width = "full",
             desc = "Set the visibility of frames outside of range",
             min = 0,
             max = 1,
@@ -201,10 +201,48 @@ local options = {
 	disabled = function()
         return BlizzFaderDB.DisableEnemySpells
     end,
+	 },
+	 
 	
-	
-	
+	RogueEnemy = {
+    type = "select",
+    name = "Harmful Spells",
+    desc = "Set the range based on harmful spells",
+    get = function()
+		if BlizzFaderDB.RogueEnemy == nil then
+            BlizzFaderDB.RogueEnemy = 2 -- Set the default index for the friendly spells
+        end
+        return BlizzFaderDB.RogueEnemy
+    end,
+    set = function(info, value)
+        BlizzFaderDB.RogueEnemy = value;
+    end,
+    values = {
+    -- Slice and Dice
+    "|TInterface\\Icons\\Ability_Rogue_SliceDice:15:15|t 100m (lvl 10)",
+    -- Throw
+    "|TInterface\\Icons\\Ability_Throw:15:15|t 30m",
+    -- Shadow Step
+    "|TInterface\\Icons\\Ability_Rogue_Shadowstep:15:15|t 25m (lvl 50)",
+    -- Blind
+	  "|TInterface\\Icons\\Spell_Shadow_MindSteal:15:15|t 10m (lvl 34, 12m, 15m Dirty Tricks)", 
+	  -- Sap
+	 "|TInterface\\Icons\\Ability_Sap:15:15|t 5m (lvl 10, 7m, 10m Dirty Tricks)",
+	  -- Eviscerate
+	 "|TInterface\\Icons\\Ability_Rogue_Eviscerate:15:15|t 5m", 
     },
+    order = 1,
+	width = "full",
+    hidden = function()
+        return select(2, UnitClass("player")) ~= "ROGUE"
+    end,
+    disabled = function()
+        return BlizzFaderDB.DisableEnemySpells
+    end,
+    },
+	
+	
+   
 	},
 	},
 
@@ -344,6 +382,34 @@ local options = {
         return select(2, UnitClass("player")) ~= "WARLOCK"
     end,
 	disabled = function()
+        return BlizzFaderDB.DisableFriendlySpells
+    end,
+    },
+	
+	
+	RogueFriendly = {
+    type = "select",
+    name = "Friendly Spells",
+    desc = "Set the range based on friendly spells",
+    get = function()
+		if BlizzFaderDB.RogueFriendly == nil then
+            BlizzFaderDB.RogueFriendly = 1 -- Set the default index for the friendly spells
+        end
+        return BlizzFaderDB.RogueFriendly
+    end,
+    set = function(info, value)
+        BlizzFaderDB.RogueFriendly = value;
+    end,
+    values = {
+    -- Bandage
+    "|TInterface\\Icons\\INV_Misc_Bandage_Netherweave_Heavy:15:15|t 15m (Bandage required)",
+    },
+    order = 1,
+	width = "full",
+    hidden = function()
+        return select(2, UnitClass("player")) ~= "ROGUE"
+    end,
+    disabled = function()
         return BlizzFaderDB.DisableFriendlySpells
     end,
     },
@@ -536,6 +602,51 @@ local function UpdateFrames()
 					end
 				
 				
+				-- [ROGUE]
+                elseif BlizzFaderDB.RogueEnemy == 1 and select(2, UnitClass("player")) == "ROGUE" then 
+                    -- Slice and Dice 
+                    if IsSpellInRange(5171) then
+                    inRange = IsSpellInRange(5171, unit) == 1
+                    else
+						           inRange = true
+					           end
+                elseif BlizzFaderDB.RogueEnemy == 2 and select(2, UnitClass("player")) == "ROGUE" then 
+                    -- Throw
+                    if IsSpellInRange(2764) then
+                    inRange = IsSpellInRange(2764, unit) == 1
+                    else
+						           inRange = true
+					           end
+                elseif BlizzFaderDB.RogueEnemy == 3 and select(2, UnitClass("player")) == "ROGUE DE" then 
+                    -- Shadow Step
+                    if IsSpellInRange(36554) then
+                    inRange = IsSpellInRange(36554, unit) == 1
+                    else
+						           inRange = true
+					           end
+                elseif BlizzFaderDB.RogueEnemy == 4 and select(2, UnitClass("player")) == "ROGUE" then 
+                    -- Blind
+                    if IsSpellInRange(2094) then
+                    inRange = IsSpellInRange(2094, unit) == 1
+                    else
+						           inRange = true
+					           end
+                  elseif BlizzFaderDB.RogueEnemy == 5 and select(2, UnitClass("player")) == "ROGUE" then 
+                    -- Sap
+                    if IsSpellInRange(6770) then
+                    inRange = IsSpellInRange(6770, unit) == 1
+                    else
+						           inRange = true
+					           end
+                elseif BlizzFaderDB.RogueEnemy == 6 and select(2, UnitClass("player")) == "ROGUE" then 
+                    -- Eviscerate
+                    if IsSpellInRange(2098) then
+                    inRange = IsSpellInRange(2098, unit) == 1
+                    else
+						           inRange = true
+					           end
+							   
+				
                     end
                 -- Fade out the frame if the player is out of range
                 if not inRange then
@@ -611,7 +722,21 @@ local function UpdateFrames()
 					else
 						inRange = true
 					end
-					
+				
+				
+				-- [ROGUE]
+               elseif BlizzFaderDB.RogueFriendly == 1 and select(2, UnitClass("player")) == "ROGUE" then
+                    -- Bandage
+                    if IsItemInRange(21991) then
+                    inRange = IsItemInRange(21991, unit) == 1
+					elseif IsItemInRange(27032) then 
+					inRange = IsItemInRange(27032, unit) == 1
+					elseif IsItemInRange(1251) then 
+					inRange = IsItemInRange(1251, unit) == 1
+                    else
+						inRange = true
+					end
+							   
 					
                 end
 			 
