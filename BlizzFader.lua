@@ -4,6 +4,7 @@ local ADDON_VERSION = 1
 -- Default BlizzFaderDB
 local defaultBlizzFaderDB = {
     opacity = 0.5,
+	enableRedBorder = true
 }
 
 -- Saved variables
@@ -34,8 +35,8 @@ local options = {
             max = 1,
             step = 0.1,
             get = function()
-				if BlizzFaderDB.opacity == 0 then
-				BlizzFaderDB.opacity = 0.5 -- Set the default index for the harmful spells
+				if BlizzFaderDB.opacity == nil then
+				BlizzFaderDB.opacity = defaultBlizzFaderDB.opacity -- Set the default index for the harmful spells
 				end
                 return BlizzFaderDB.opacity
             end,
@@ -56,8 +57,9 @@ local options = {
 		DisableEnemySpells = {
     type = "toggle",
     name = "Disable Harmful Spells",
+	desc = "Disable Harmful spells for Target Frame",
     order = 0,
-    width = "full",
+    -- width = "full",
     get = function()
 		if BlizzFaderDB.DisableEnemySpells == nil then
 			BlizzFaderDB.DisableEnemySpells = false -- Set the default index for the harmful spells
@@ -68,6 +70,24 @@ local options = {
         BlizzFaderDB.DisableEnemySpells = value
     end,
 },
+
+	enableRedBorder = {
+    type = "toggle",
+    name = "Enable Red Border",
+    desc = "Toggle the red border around the frame when in melee range",
+    order = 1,
+    -- width = "full",
+    get = function()
+			if BlizzFaderDB.enableRedBorder == nil then
+			BlizzFaderDB.enableRedBorder = true -- Set the default index
+		end
+			return BlizzFaderDB.enableRedBorder
+          end,
+    set = function(_, value)
+			BlizzFaderDB.enableRedBorder = value
+          end,
+},
+
 
      DruidEnemy = {
     type = "select",
@@ -96,8 +116,8 @@ local options = {
     end,
     disabled = function()
         return BlizzFaderDB.DisableEnemySpells
-    end,
-    },
+    end,        
+ },
 
 
     ShamanEnemy = {
@@ -258,8 +278,9 @@ local options = {
     DisableFriendlySpells = {
     type = "toggle",
     name = "Disable Friendly Spells",
+	desc = "Disable Friendly spells for Target and Party Frames",
     order = 0,
-    width = "full",
+    -- width = "full",
     get = function()
 		if BlizzFaderDB.DisableFriendlySpells == nil then
 			BlizzFaderDB.DisableFriendlySpells = false -- Set the default index for the harmful spells
@@ -662,7 +683,7 @@ local function UpdateFrames()
                     end
 				
 				-- Add a red border if in melee range
-				if inMeleeRange then
+				if inMeleeRange and BlizzFaderDB.enableRedBorder then
 					TargetFrameFlash:SetVertexColor(1, 0, 0) -- Red border color
 					TargetFrameFlash:Show();
 				else
