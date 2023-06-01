@@ -479,6 +479,7 @@ local function UpdateFrames()
             -- Determine if the player is enemy and in range
             if (UnitExists(unit) and not UnitIsDead(unit) and not UnitIsDeadOrGhost(unit) and not UnitIsGhost(unit) and UnitIsConnected(unit) and UnitCanAttack("player", unit)) and not BlizzFaderDB.DisableEnemySpells then
                 local inRange = true
+				local inMeleeRange = false
                 -- [DRUID]
                 if BlizzFaderDB.DruidEnemy == 1 and select(2, UnitClass("player")) == "DRUID" then 
                     -- Soothe Animal
@@ -612,12 +613,15 @@ local function UpdateFrames()
 					           end
                 elseif BlizzFaderDB.RogueEnemy == 2 and select(2, UnitClass("player")) == "ROGUE" then 
                     -- Throw
-                    if IsSpellInRange(2764) then
-                    inRange = IsSpellInRange(2764, unit) == 1
-                    else
-						           inRange = true
-					           end
-                elseif BlizzFaderDB.RogueEnemy == 3 and select(2, UnitClass("player")) == "ROGUE DE" then 
+                    -- Check if within melee range for Eviscerate
+					if IsSpellInRange(2098, unit) == 1 then
+						inMeleeRange = true
+					-- Check if out of range for Throw
+					elseif IsSpellInRange(2764, unit) == 0 then
+						inRange = false
+					end
+				
+                elseif BlizzFaderDB.RogueEnemy == 3 and select(2, UnitClass("player")) == "ROGUE" then 
                     -- Shadow Step
                     if IsSpellInRange(36554) then
                     inRange = IsSpellInRange(36554, unit) == 1
@@ -645,17 +649,25 @@ local function UpdateFrames()
                     else
 						           inRange = true
 					           end
-							   
-				
                     end
                 -- Fade out the frame if the player is out of range
                 if not inRange then
                     frame:SetAlpha(BlizzFaderDB.opacity)
+					
+					TargetFrameFlash:Hide();
                 else
                     -- Fade in the frame if the player is in range
                     if frame:GetAlpha() < 0.8 then
                         frame:SetAlpha(1)
                     end
+				
+				-- Add a red border if in melee range
+				if inMeleeRange then
+					TargetFrameFlash:SetVertexColor(1, 0, 0) -- Red border color
+					TargetFrameFlash:Show();
+				else
+					TargetFrameFlash:Hide();
+				end
                 end
             end
 
@@ -727,17 +739,7 @@ local function UpdateFrames()
 				-- [ROGUE]
                elseif BlizzFaderDB.RogueFriendly == 1 and select(2, UnitClass("player")) == "ROGUE" then
                     -- Bandage
-                    if IsItemInRange(21991) then
                     inRange = IsItemInRange(21991, unit) == 1
-					elseif IsItemInRange(27032) then 
-					inRange = IsItemInRange(27032, unit) == 1
-					elseif IsItemInRange(1251) then 
-					inRange = IsItemInRange(1251, unit) == 1
-                    else
-						inRange = true
-					end
-							   
-					
                 end
 			 
                 -- Fade out the frame if the player is out of range
