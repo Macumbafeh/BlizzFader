@@ -7,6 +7,7 @@ local defaultBlizzFaderDB = {
 	enableRedBorder = true
 }
 
+
 -- Saved variables
 BlizzFaderDB = BlizzFaderDB or {}
 
@@ -423,7 +424,7 @@ local options = {
     end,
     values = {
     -- Bandage
-    "|TInterface\\Icons\\INV_Misc_Bandage_Netherweave_Heavy:15:15|t 15m (Bandage required)",
+    "|TInterface\\Icons\\INV_Misc_Bandage_Netherweave_Heavy:15:15|t 15m",
     },
     order = 1,
 	width = "full",
@@ -435,7 +436,15 @@ local options = {
     end,
     },
 	
-	
+	SaveAndReload = {
+		type = "execute",
+		name = "Save & Reload",
+		desc = "Save the settings and reload the UI",
+		func = function()
+			ReloadUI()
+			end,
+		order = 10,
+       },
 	  },
     },
   },
@@ -445,6 +454,13 @@ local options = {
 local function RegisterOptions()
     LibStub("AceConfig-3.0"):RegisterOptionsTable(ADDON_NAME, options)
     LibStub("AceConfigDialog-3.0"):AddToBlizOptions(ADDON_NAME, ADDON_NAME)
+end
+
+-- Set up slash commands
+SLASH_BLIZZFADER1 = "/blizzfader"
+SLASH_BLIZZFADER2 = "/bf"
+SlashCmdList["BLIZZFADER"] = function()
+    InterfaceOptionsFrame_OpenToCategory(addonOptions)
 end
 
 -- Call function to register options
@@ -498,7 +514,7 @@ local function UpdateFrames()
         if frame and unit then
 			
             -- Determine if the player is enemy and in range
-            if (UnitExists(unit) and not UnitIsDead(unit) and not UnitIsDeadOrGhost(unit) and not UnitIsGhost(unit) and UnitIsConnected(unit) and UnitCanAttack("player", unit)) and not BlizzFaderDB.DisableEnemySpells then
+            if (UnitExists(unit) and not UnitIsDead(unit) and not UnitIsDeadOrGhost(unit) and not UnitIsGhost(unit) and UnitIsConnected(unit) and UnitCanAttack("player", unit)) then
                 local inRange = true
 				local inMeleeRange = false
                 -- [DRUID]
@@ -627,58 +643,71 @@ local function UpdateFrames()
 				-- [ROGUE]
                 elseif BlizzFaderDB.RogueEnemy == 1 and select(2, UnitClass("player")) == "ROGUE" then 
                     -- Slice and Dice 
-                    if IsSpellInRange(5171) then
-                    inRange = IsSpellInRange(5171, unit) == 1
-                    else
-						           inRange = true
-					           end
-                elseif BlizzFaderDB.RogueEnemy == 2 and select(2, UnitClass("player")) == "ROGUE" then 
+                     -- Check if within melee range for Eviscerate
+                    if IsSpellInRange(2098, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Slice and Dice
+                    elseif IsSpellInRange(5171, unit) == 0 then
+                        inRange = false
+                    end
+                               
+				elseif BlizzFaderDB.RogueEnemy == 2 and select(2, UnitClass("player")) == "ROGUE" then 
                     -- Throw
                     -- Check if within melee range for Eviscerate
-					if IsSpellInRange(2098, unit) == 1 then
-						inMeleeRange = true
-					-- Check if out of range for Throw
-					elseif IsSpellInRange(2764, unit) == 0 then
-						inRange = false
-					end
-				
+                    if IsSpellInRange(2098, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Throw
+                    elseif IsSpellInRange(2764, unit) == 0 then
+                        inRange = false
+                    end
+                
                 elseif BlizzFaderDB.RogueEnemy == 3 and select(2, UnitClass("player")) == "ROGUE" then 
                     -- Shadow Step
-                    if IsSpellInRange(36554) then
-                    inRange = IsSpellInRange(36554, unit) == 1
-                    else
-						           inRange = true
-					           end
-                elseif BlizzFaderDB.RogueEnemy == 4 and select(2, UnitClass("player")) == "ROGUE" then 
+                    -- Check if within melee range for Eviscerate
+                    if IsSpellInRange(2098, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Shadow Step
+                    elseif IsSpellInRange(36554, unit) == 0 then
+                        inRange = false
+                    end
+				elseif BlizzFaderDB.RogueEnemy == 4 and select(2, UnitClass("player")) == "ROGUE" then 
                     -- Blind
-                    if IsSpellInRange(2094) then
-                    inRange = IsSpellInRange(2094, unit) == 1
-                    else
-						           inRange = true
-					           end
+                    -- Check if within melee range for Eviscerate
+                    if IsSpellInRange(2098, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Blind
+                    elseif IsSpellInRange(2094, unit) == 0 then
+                        inRange = false
+                    end
+                    
                   elseif BlizzFaderDB.RogueEnemy == 5 and select(2, UnitClass("player")) == "ROGUE" then 
                     -- Sap
-                    if IsSpellInRange(6770) then
-                    inRange = IsSpellInRange(6770, unit) == 1
-                    else
-						           inRange = true
-					           end
+                    -- Check if within melee range for Eviscerate
+                    if IsSpellInRange(2098, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Sap
+                    elseif IsSpellInRange(6770, unit) == 0 then
+                        inRange = false
+                    end
+                    
                 elseif BlizzFaderDB.RogueEnemy == 6 and select(2, UnitClass("player")) == "ROGUE" then 
                     -- Eviscerate
-                    if IsSpellInRange(2098) then
-                    inRange = IsSpellInRange(2098, unit) == 1
-                    else
-						           inRange = true
-					           end
+                    -- Check if within melee range for Eviscerate
+				if IsSpellInRange(2098, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range 
+                    elseif IsSpellInRange(2098, unit) == 0 then
+                        inRange = false
                     end
+                end
                 -- Fade out the frame if the player is out of range
-                if not inRange then
+                if not inRange and not BlizzFaderDB.DisableEnemySpells then
                     frame:SetAlpha(BlizzFaderDB.opacity)
 					
 					TargetFrameFlash:Hide();
                 else
                     -- Fade in the frame if the player is in range
-                    if frame:GetAlpha() < 0.8 then
+                    if frame:GetAlpha() < 0.91 then
                         frame:SetAlpha(1)
                     end
 				
@@ -693,7 +722,7 @@ local function UpdateFrames()
             end
 
             -- Determine if the player is friend and in range
-            if (UnitExists(unit) and not UnitIsDead(unit) and not UnitIsDeadOrGhost(unit) and not UnitIsGhost(unit) and UnitIsConnected(unit) and UnitIsFriend("player", unit)) and not BlizzFaderDB.DisableFriendlySpells then
+            if (UnitExists(unit) and not UnitIsDead(unit) and not UnitIsDeadOrGhost(unit) and not UnitIsGhost(unit) and UnitIsConnected(unit) and UnitIsFriend("player", unit)) then
                 local inRange = true
                 -- [DRUID]
                 if BlizzFaderDB.DruidFriendly == 1 and select(2, UnitClass("player")) == "DRUID" then 
@@ -760,15 +789,15 @@ local function UpdateFrames()
 				-- [ROGUE]
                elseif BlizzFaderDB.RogueFriendly == 1 and select(2, UnitClass("player")) == "ROGUE" then
                     -- Bandage
-                    inRange = IsItemInRange(21991, unit) == 1
+                    inRange = IsItemInRange(1180, unit) == 1
                 end
 			 
                 -- Fade out the frame if the player is out of range
-                if not inRange then
+                if not inRange and not BlizzFaderDB.DisableFriendlySpells then
                     frame:SetAlpha(BlizzFaderDB.opacity)
                 else
                     -- Fade in the frame if the player is in range
-                    if frame:GetAlpha() < 0.8 then
+                    if frame:GetAlpha() < 0.91 then
                         frame:SetAlpha(1)
 						
                     end
