@@ -789,7 +789,7 @@ local function UpdateFrames()
 				-- [ROGUE]
                elseif BlizzFaderDB.RogueFriendly == 1 and select(2, UnitClass("player")) == "ROGUE" then
                     -- Bandage
-                    inRange = IsItemInRange(1180, unit) == 1
+                    inRange = IsItemInRange(21991, unit) == 1
                 end
 			 
                 -- Fade out the frame if the player is out of range
