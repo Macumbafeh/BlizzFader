@@ -60,7 +60,7 @@ local options = {
     name = "Disable Harmful Spells",
 	desc = "Disable Harmful spells for Target Frame",
     order = 0,
-    -- width = "full",
+    width = "full",
     get = function()
 		if BlizzFaderDB.DisableEnemySpells == nil then
 			BlizzFaderDB.DisableEnemySpells = false -- Set the default index for the harmful spells
@@ -89,6 +89,22 @@ local options = {
           end,
 },
 
+    enableDeadzoneHighlight = {
+    type = "toggle",
+    name = "Enable Yellow Border",
+    desc = "Toggle the yellow border around the frame when in deadzone range",
+    order = 1,
+    -- width = "full",
+    get = function()
+			if BlizzFaderDB.enableDeadzoneHighlight == nil then
+			BlizzFaderDB.enableDeadzoneHighlight = true -- Set the default index
+		end
+			return BlizzFaderDB.enableDeadzoneHighlight
+          end,
+    set = function(_, value)
+			BlizzFaderDB.enableDeadzoneHighlight = value
+          end,
+},
 
      DruidEnemy = {
     type = "select",
@@ -460,7 +476,7 @@ end
 SLASH_BLIZZFADER1 = "/blizzfader"
 SLASH_BLIZZFADER2 = "/bf"
 SlashCmdList["BLIZZFADER"] = function()
-    InterfaceOptionsFrame_OpenToCategory(addonOptions)
+    InterfaceOptionsFrame_OpenToCategory("BlizzFader")
 end
 
 -- Call function to register options
