@@ -4,7 +4,8 @@ local ADDON_VERSION = 1
 -- Default BlizzFaderDB
 local defaultBlizzFaderDB = {
     opacity = 0.5,
-	enableRedBorder = true
+	enableRedBorder = true,
+	enableDeadzoneHighlight = true,
 }
 
 
@@ -55,24 +56,7 @@ local options = {
 		 width = "full",
          args = {
 		 
-		DisableEnemySpells = {
-    type = "toggle",
-    name = "Disable Harmful Spells",
-	desc = "Disable Harmful spells for Target Frame",
-    order = 0,
-    width = "full",
-    get = function()
-		if BlizzFaderDB.DisableEnemySpells == nil then
-			BlizzFaderDB.DisableEnemySpells = false -- Set the default index for the harmful spells
-		end
-        return BlizzFaderDB.DisableEnemySpells
-    end,
-    set = function(info, value)
-        BlizzFaderDB.DisableEnemySpells = value
-    end,
-},
-
-	enableRedBorder = {
+		 enableRedBorder = {
     type = "toggle",
     name = "Enable Red Border",
     desc = "Toggle the red border around the frame when in melee range",
@@ -89,7 +73,7 @@ local options = {
           end,
 },
 
-    enableDeadzoneHighlight = {
+enableDeadzoneHighlight = {
     type = "toggle",
     name = "Enable Yellow Border",
     desc = "Toggle the yellow border around the frame when in deadzone range",
@@ -105,6 +89,26 @@ local options = {
 			BlizzFaderDB.enableDeadzoneHighlight = value
           end,
 },
+		 
+		DisableEnemySpells = {
+    type = "toggle",
+    name = "Disable Harmful Spells",
+	desc = "Disable Harmful spells for Target Frame",
+    order = 2,
+    width = "full",
+    get = function()
+		if BlizzFaderDB.DisableEnemySpells == nil then
+			BlizzFaderDB.DisableEnemySpells = false -- Set the default index for the harmful spells
+		end
+        return BlizzFaderDB.DisableEnemySpells
+    end,
+    set = function(info, value)
+        BlizzFaderDB.DisableEnemySpells = value
+    end,
+},
+
+	
+
 
      DruidEnemy = {
     type = "select",
@@ -126,7 +130,7 @@ local options = {
 	"|TInterface\\Icons\\Spell_Nature_AbolishMagic:15:15|t 30m (33m, 36m Nature's Reach)", 
 	-- Cyclone
 	"|TInterface\\Icons\\Spell_Nature_EarthBind:15:15|t 20m (lvl 70 only)"},
-    order = 1,
+    order = 3,
     width = "full",
     hidden = function()
         return select(2, UnitClass("player")) ~= "DRUID"
@@ -158,7 +162,7 @@ local options = {
 	-- Earth Shock
 	"|TInterface\\Icons\\Spell_Nature_EarthShock:15:15|t 20m (25m Gladiator Gloves)]",
     },
-    order = 1,
+    order = 3,
     width = "full",
     hidden = function()
         return select(2, UnitClass("player")) ~= "SHAMAN"
@@ -194,7 +198,7 @@ local options = {
 	  -- Fire Blast
 	  "|TInterface\\Icons\\Spell_Fire_Fireball:15:15|t 20m (lvl 6, 23m, 26m Flame Throwing)", 
     },
-    order = 1,
+    order = 3,
     width = "full",
     hidden = function()
         return select(2, UnitClass("player")) ~= "MAGE"
@@ -230,7 +234,7 @@ local options = {
    -- Shadowburn
    "|TInterface\\Icons\\Spell_Shadow_ScourgeBuild:15:15|t 20m (lvl 20, 22m, 24m Destructive Reach)", 
     },
-    order = 1,
+    order = 3,
     width = "full",
     hidden = function()
         return select(2, UnitClass("player")) ~= "WARLOCK"
@@ -268,7 +272,7 @@ local options = {
 	  -- Eviscerate
 	 "|TInterface\\Icons\\Ability_Rogue_Eviscerate:15:15|t 5m", 
     },
-    order = 1,
+    order = 3,
 	width = "full",
     hidden = function()
         return select(2, UnitClass("player")) ~= "ROGUE"
@@ -476,7 +480,7 @@ end
 SLASH_BLIZZFADER1 = "/blizzfader"
 SLASH_BLIZZFADER2 = "/bf"
 SlashCmdList["BLIZZFADER"] = function()
-    InterfaceOptionsFrame_OpenToCategory("BlizzFader")
+    InterfaceOptionsFrame_OpenToFrame(ADDON_NAME)
 end
 
 -- Call function to register options
@@ -533,6 +537,7 @@ local function UpdateFrames()
             if (UnitExists(unit) and not UnitIsDead(unit) and not UnitIsDeadOrGhost(unit) and not UnitIsGhost(unit) and UnitIsConnected(unit) and UnitCanAttack("player", unit)) then
                 local inRange = true
 				local inMeleeRange = false
+				local inDeadzone = false
                 -- [DRUID]
                 if BlizzFaderDB.DruidEnemy == 1 and select(2, UnitClass("player")) == "DRUID" then 
                     -- Soothe Animal
@@ -675,7 +680,7 @@ local function UpdateFrames()
                     -- Check if out of range for Throw
                     elseif IsSpellInRange(2764, unit) == 0 then
                         inRange = false
-                    end
+					end
                 
                 elseif BlizzFaderDB.RogueEnemy == 3 and select(2, UnitClass("player")) == "ROGUE" then 
                     -- Shadow Step
@@ -716,10 +721,14 @@ local function UpdateFrames()
                         inRange = false
                     end
                 end
+				
+				-- Check if within deadzone range (5-8m)
+				if IsItemInRange(34368, unit) == 1 then
+						inDeadzone = true
+                    end
                 -- Fade out the frame if the player is out of range
                 if not inRange and not BlizzFaderDB.DisableEnemySpells then
                     frame:SetAlpha(BlizzFaderDB.opacity)
-					
 					TargetFrameFlash:Hide();
                 else
                     -- Fade in the frame if the player is in range
@@ -731,6 +740,9 @@ local function UpdateFrames()
 				if inMeleeRange and BlizzFaderDB.enableRedBorder then
 					TargetFrameFlash:SetVertexColor(1, 0, 0) -- Red border color
 					TargetFrameFlash:Show();
+				elseif inDeadzone and BlizzFaderDB.enableDeadzoneHighlight and not inMeleeRange then
+					TargetFrameFlash:SetVertexColor(1, 1, 0) -- Yellow border color
+					TargetFrameFlash:Show()
 				else
 					TargetFrameFlash:Hide();
 				end
