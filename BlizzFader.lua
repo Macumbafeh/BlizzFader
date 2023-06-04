@@ -47,8 +47,8 @@ local options = {
             end
         },
 	},
-	},
-	RangeEnemy = {
+},
+	ColorEnemy = {
          type = "group",
          name = "Enemy target Range option",
          order = 2,
@@ -58,10 +58,10 @@ local options = {
 		 
 		 enableRedBorder = {
     type = "toggle",
-    name = "Enable Red Border",
+    name = "Enable Melee Border",
     desc = "Toggle the red border around the frame when in melee range",
-    order = 1,
-    -- width = "full",
+    order = 0,
+    width = "full",
     get = function()
 			if BlizzFaderDB.enableRedBorder == nil then
 			BlizzFaderDB.enableRedBorder = true -- Set the default index
@@ -73,12 +73,30 @@ local options = {
           end,
 },
 
+redBorderColor = {
+    type = "color",
+    name = "Melee Border Color",
+    desc = "Set the color of the Melee border",
+    order = 1,
+    get = function()
+        local color = BlizzFaderDB.redBorderColor or { r = 1, g = 0, b = 0, a = 1 } -- Default red color
+        return color.r, color.g, color.b, color.a
+    end,
+    set = function(_, r, g, b, a)
+        BlizzFaderDB.redBorderColor = { r = r, g = g, b = b, a = a }
+    end,
+    hasAlpha = true,
+    disabled = function()
+        return not BlizzFaderDB.enableRedBorder
+    end,
+},
+
 enableDeadzoneHighlight = {
     type = "toggle",
-    name = "Enable Yellow Border",
+    name = "Enable Deadzone Border",
     desc = "Toggle the yellow border around the frame when in deadzone range",
-    order = 1,
-    -- width = "full",
+    order = 2,
+    width = "full",
     get = function()
 			if BlizzFaderDB.enableDeadzoneHighlight == nil then
 			BlizzFaderDB.enableDeadzoneHighlight = true -- Set the default index
@@ -89,12 +107,41 @@ enableDeadzoneHighlight = {
 			BlizzFaderDB.enableDeadzoneHighlight = value
           end,
 },
+
+yellowBorderColor = {
+    type = "color",
+    name = "Deadzone Border Color",
+    desc = "Set the color of the Deadzone border",
+    order = 3,
+    get = function()
+        local color = BlizzFaderDB.yellowBorderColor or { r = 1, g = 1, b = 0, a = 1 } -- Default red color
+        return color.r, color.g, color.b, color.a
+    end,
+    set = function(_, r, g, b, a)
+        BlizzFaderDB.yellowBorderColor = { r = r, g = g, b = b, a = a }
+    end,
+    hasAlpha = true,
+    disabled = function()
+        return not BlizzFaderDB.enableDeadzoneHighlight
+    end,
+},
+},
+},		 
+	RangeEnemy = {
+         type = "group",
+         name = "Enemy target Range option",
+         order = 3,
+		 inline = true,
+		 width = "full",
+         args = {
+		 
+		 
 		 
 		DisableEnemySpells = {
     type = "toggle",
     name = "Disable Harmful Spells",
 	desc = "Disable Harmful spells for Target Frame",
-    order = 2,
+    order = 0,
     width = "full",
     get = function()
 		if BlizzFaderDB.DisableEnemySpells == nil then
@@ -130,7 +177,7 @@ enableDeadzoneHighlight = {
 	"|TInterface\\Icons\\Spell_Nature_AbolishMagic:15:15|t 30m (33m, 36m Nature's Reach)", 
 	-- Cyclone
 	"|TInterface\\Icons\\Spell_Nature_EarthBind:15:15|t 20m (lvl 70 only)"},
-    order = 3,
+    order = 1,
     width = "full",
     hidden = function()
         return select(2, UnitClass("player")) ~= "DRUID"
@@ -162,7 +209,7 @@ enableDeadzoneHighlight = {
 	-- Earth Shock
 	"|TInterface\\Icons\\Spell_Nature_EarthShock:15:15|t 20m (25m Gladiator Gloves)]",
     },
-    order = 3,
+    order = 1,
     width = "full",
     hidden = function()
         return select(2, UnitClass("player")) ~= "SHAMAN"
@@ -198,7 +245,7 @@ enableDeadzoneHighlight = {
 	  -- Fire Blast
 	  "|TInterface\\Icons\\Spell_Fire_Fireball:15:15|t 20m (lvl 6, 23m, 26m Flame Throwing)", 
     },
-    order = 3,
+    order = 1,
     width = "full",
     hidden = function()
         return select(2, UnitClass("player")) ~= "MAGE"
@@ -234,7 +281,7 @@ enableDeadzoneHighlight = {
    -- Shadowburn
    "|TInterface\\Icons\\Spell_Shadow_ScourgeBuild:15:15|t 20m (lvl 20, 22m, 24m Destructive Reach)", 
     },
-    order = 3,
+    order = 1,
     width = "full",
     hidden = function()
         return select(2, UnitClass("player")) ~= "WARLOCK"
@@ -272,7 +319,7 @@ enableDeadzoneHighlight = {
 	  -- Eviscerate
 	 "|TInterface\\Icons\\Ability_Rogue_Eviscerate:15:15|t 5m", 
     },
-    order = 3,
+    order = 1,
 	width = "full",
     hidden = function()
         return select(2, UnitClass("player")) ~= "ROGUE"
@@ -291,7 +338,7 @@ enableDeadzoneHighlight = {
    RangeFriendly = {
          type = "group",
          name = "Friendly target and Party Range option",       
-         order = 3,
+         order = 4,
          width = "full",
 		 inline = true,
          args = {
@@ -738,10 +785,14 @@ local function UpdateFrames()
 				
 				-- Add a red border if in melee range
 				if inMeleeRange and BlizzFaderDB.enableRedBorder then
-					TargetFrameFlash:SetVertexColor(1, 0, 0) -- Red border color
+					local color = BlizzFaderDB.redBorderColor or { r = 1, g = 0, b = 0, a = 1 } -- Default red color
+					TargetFrameFlash:SetVertexColor(color.r, color.g, color.b, color.a)
 					TargetFrameFlash:Show();
 				elseif inDeadzone and BlizzFaderDB.enableDeadzoneHighlight and not inMeleeRange then
-					TargetFrameFlash:SetVertexColor(1, 1, 0) -- Yellow border color
+					local color = BlizzFaderDB.yellowBorderColor or { r = 1, g = 1, b = 0, a = 1 } -- Default red color
+					TargetFrameFlash:SetVertexColor(color.r, color.g, color.b, color.a)
+					
+					
 					TargetFrameFlash:Show()
 				else
 					TargetFrameFlash:Hide();
