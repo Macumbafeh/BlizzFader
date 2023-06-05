@@ -804,71 +804,58 @@ local function UpdateFrames()
             if (UnitExists(unit) and not UnitIsDead(unit) and not UnitIsDeadOrGhost(unit) and not UnitIsGhost(unit) and UnitIsConnected(unit) and UnitIsFriend("player", unit)) then
                 local inRange = true
                 -- [DRUID]
-                if BlizzFaderDB.DruidFriendly == 1 and select(2, UnitClass("player")) == "DRUID" then 
-                    
+                 if BlizzFaderDB.DruidFriendly == 1 and select(2, UnitClass("player")) == "DRUID" then 
                     -- Healing touch
-                    if IsSpellInRange(5185) then
-                    inRange = IsSpellInRange(5185, unit) == 1
-                    else
-						           inRange = true
-				           	end
+					if IsSpellInRange(5185, unit) == 0 then
+                        inRange = false
+					end
                 elseif BlizzFaderDB.DruidFriendly == 2 and select(2, UnitClass("player")) == "DRUID" then
                     -- Mark of the Wild
-                    if IsSpellInRange(1126) then
-                    inRange = IsSpellInRange(1126, unit) == 1
-                    else
-						inRange = true
+					if IsSpellInRange(1126, unit) == 0 then
+                        inRange = false
 					end
 
 
                 -- [SHAMAN]
                elseif BlizzFaderDB.DruidFriendly == 1 and select(2, UnitClass("player")) == "SHAMAN" then
                     -- Healing Wave
-                    if IsSpellInRange(331) then
-                    inRange = IsSpellInRange(331, unit) == 1
-                    else
-						inRange = true
+                    if IsSpellInRange(331, unit) == 0 then
+                        inRange = false
 					end
                elseif BlizzFaderDB.DruidFriendly == 2 and select(2, UnitClass("player")) == "SHAMAN" then
                     -- Ancestral Spirit
-                    if IsSpellInRange(2008) then
-                    inRange = IsSpellInRange(2008, unit) == 1
-                    else
-						inRange = true
+					if IsSpellInRange(2008, unit) == 0 then
+                        inRange = false
 					end
 					
 					
 				-- [MAGE]
                elseif BlizzFaderDB.MageFriendly == 1 and select(2, UnitClass("player")) == "MAGE" then
                     -- Arcane Brilliance
-                    if IsSpellInRange(23028) then
-                    inRange = IsSpellInRange(23028, unit) == 1
-                    else
-						inRange = true
+                    if IsSpellInRange(23028, unit) == 0 then
+                        inRange = false
 					end
                elseif BlizzFaderDB.MageFriendly == 2 and select(2, UnitClass("player")) == "MAGE" then
                     -- Arcane Intellect
-                    if IsSpellInRange(1459) then
-                    inRange = IsSpellInRange(1459, unit) == 1
-                    else
-						inRange = true
+                    if IsSpellInRange(1459, unit) == 0 then
+                        inRange = false
 					end
 				
 
 				-- [WARLOCK]
                elseif BlizzFaderDB.WarlockFriendly == 1 and select(2, UnitClass("player")) == "WARLOCK" then
                     -- Unending Breath
-                    if IsSpellInRange(5697) then
-						inRange = IsSpellInRange(5697, unit) == 1
-					else
-						inRange = true
+					if IsSpellInRange(5697, unit) == 0 then
+                        inRange = false
 					end
 				
 				
 				-- [ROGUE]
                elseif BlizzFaderDB.RogueFriendly == 1 and select(2, UnitClass("player")) == "ROGUE" then
                     -- Bandage
-                    inRange = IsItemInRange(21991, unit) == 1
+					if IsSpellInRange(21991, unit) == 0 then
+                        inRange = false
+					end
                 end
 			 
                 -- Fade out the frame if the player is out of range
