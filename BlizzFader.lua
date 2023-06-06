@@ -309,7 +309,7 @@ yellowBorderColor = {
     -- Slice and Dice
     "|TInterface\\Icons\\Ability_Rogue_SliceDice:15:15|t 100m (lvl 10)",
     -- Throw
-    "|TInterface\\Icons\\Ability_Throw:15:15|t 30m",
+    "|TInterface\\Icons\\Ability_Throw:15:15|t 5-30m",
     -- Shadow Step
     "|TInterface\\Icons\\Ability_Rogue_Shadowstep:15:15|t 25m (lvl 50)",
     -- Blind
