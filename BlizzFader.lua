@@ -172,11 +172,16 @@ yellowBorderColor = {
     end,
     values = {
     -- Soothe Animal
-	"|TInterface\\Icons\\Ability_Hunter_BeastSoothe:15:15|t 40m (lvl 22)", 
+	"|TInterface\\Icons\\Ability_Hunter_BeastSoothe:15:15|t 40m (lvl 22, 44m, 48m Nature's Reach)", 
 	-- Wrath
 	"|TInterface\\Icons\\Spell_Nature_AbolishMagic:15:15|t 30m (33m, 36m Nature's Reach)", 
 	-- Cyclone
-	"|TInterface\\Icons\\Spell_Nature_EarthBind:15:15|t 20m (lvl 70 only)"},
+	"|TInterface\\Icons\\Spell_Nature_EarthBind:15:15|t 20m (lvl 70, 22m, 24m Nature's Reach)",
+	-- Feral Charge
+	"|TInterface\\Icons\\Ability_Hunter_Pet_Bear:15:15|t 8-25m (lvl 20)",
+	-- Bash (Growl)
+	"|TInterface\\Icons\\Ability_Druid_Bash:15:15|t 5m (lvl 10)",
+	},
     order = 1,
     width = "full",
     hidden = function()
@@ -588,26 +593,50 @@ local function UpdateFrames()
                 -- [DRUID]
                 if BlizzFaderDB.DruidEnemy == 1 and select(2, UnitClass("player")) == "DRUID" then 
                     -- Soothe Animal
-                    if IsSpellInRange(2908) then
-                    inRange = IsSpellInRange(2908, unit) == 1
-                    else
-						           inRange = true
-				           	end
+                    -- Check if within melee range for Growl
+                    if IsSpellInRange(6795, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Soothe Animal
+                    elseif IsSpellInRange(2908, unit) == 0 then
+                        inRange = false
+                    end
                elseif BlizzFaderDB.DruidEnemy == 2 and select(2, UnitClass("player")) == "DRUID" then 
                     -- Wrath
-                    if IsSpellInRange(5176) then
-                    inRange = IsSpellInRange(5176, unit) == 1
-                    else
-						           inRange = true
-				           	end
+					-- Check if within melee range for Growl
+                    if IsSpellInRange(6795, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Wrath
+                    elseif IsSpellInRange(5176, unit) == 0 then
+                        inRange = false
+                    end
                 elseif BlizzFaderDB.DruidEnemy == 3 and select(2, UnitClass("player")) == "DRUID" then 
                     -- Cyclone
-                    if IsSpellInRange(33786) then
-                    inRange = IsSpellInRange(33786, unit) == 1
-                    else
-						           inRange = true
-				           	end
-             
+                    -- Check if within melee range for Growl
+                    if IsSpellInRange(6795, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Cyclone
+                    elseif IsSpellInRange(33786, unit) == 0 then
+                        inRange = false
+                    end
+				elseif BlizzFaderDB.DruidEnemy == 4 and select(2, UnitClass("player")) == "DRUID" then 
+                    -- Feral Charge
+                    -- Check if within melee range for Feral Charge
+                    if IsSpellInRange(6795, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Netherweave Net item
+                    elseif IsItemInRange(24268, unit) == 0 then
+                        inRange = false
+                    end
+					
+				elseif BlizzFaderDB.DruidEnemy == 5 and select(2, UnitClass("player")) == "DRUID" then 
+                    -- Bash (Growl)
+                    -- Check if within melee range for Growl
+                    if IsSpellInRange(6795, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Bash (Growl)
+                    elseif IsSpellInRange(6795, unit) == 0 then
+                        inRange = false
+                    end
 
                 -- [SHAMAN]
                 elseif BlizzFaderDB.ShamanEnemy == 1 and select(2, UnitClass("player")) == "SHAMAN" then 
