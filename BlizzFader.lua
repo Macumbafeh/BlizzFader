@@ -913,7 +913,7 @@ local function UpdateFrames()
                     end
 				elseif BlizzFaderDB.DruidEnemy == 4 and select(2, UnitClass("player")) == "DRUID" then 
                     -- Feral Charge
-                    -- Check if within melee range for Feral Charge
+                    -- Check if within melee range for Growl
                     if IsSpellInRange(6795, unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Netherweave Net item
@@ -1303,8 +1303,8 @@ local function UpdateFrames()
                    -- Check if within melee range for Rend
                     if IsSpellInRange(772, unit) == 1 then
                         inMeleeRange = true
-                    -- Check if out of range for Charge
-                    elseif IsSpellInRange(100, unit) == 0 then
+                    -- Check if out of range for Netherweave Net item
+                    elseif IsItemInRange(24268, unit) == 0 then
                         inRange = false
                     end
                 elseif BlizzFaderDB.WarriorEnemy == 3 and select(2, UnitClass("player")) == "WARRIOR" then 
