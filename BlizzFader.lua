@@ -804,7 +804,7 @@ yellowBorderColor = {
 	SaveAndReload = {
 		type = "execute",
 		name = "Save & Reload",
-		desc = "Save the settings and reload the UI",
+		desc = "Save the settings and reload the UI, if you have some issue click on this button to reload the game",
 		func = function()
 			ReloadUI()
 			end,
