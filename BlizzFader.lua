@@ -6,6 +6,26 @@ local defaultBlizzFaderDB = {
     opacity = 0.5,
 	enableRedBorder = true,
 	enableDeadzoneHighlight = true,
+	DisableEnemySpells = false,
+	DruidEnemy = 2,
+	ShamanEnemy = 1,
+	MageEnemy = 1,
+	WarlockEnemy = 1,
+	RogueEnemy = 2,
+	PriestEnemy = 1,
+	HunterEnemy = 4,
+	PaladinEnemy = 1,
+	WarriorEnemy = 1,
+	DisableFriendlySpells = false,
+	DruidFriendly = 1,
+	ShamanFriendly = 1,
+	MageFriendly = 2,
+	WarlockFriendly = 1,
+	RogueFriendly = 1,
+	PriestFriendly = 1,
+	HunterFriendly = 1,
+	PaladinFriendly = 1,
+	WarriorFriendly = 1,
 }
 
 
@@ -64,7 +84,7 @@ local options = {
     width = "full",
     get = function()
 			if BlizzFaderDB.enableRedBorder == nil then
-			BlizzFaderDB.enableRedBorder = true -- Set the default index
+			BlizzFaderDB.enableRedBorder = defaultBlizzFaderDB.enableRedBorder -- Set the default index
 		end
 			return BlizzFaderDB.enableRedBorder
           end,
@@ -99,7 +119,7 @@ enableDeadzoneHighlight = {
     width = "full",
     get = function()
 			if BlizzFaderDB.enableDeadzoneHighlight == nil then
-			BlizzFaderDB.enableDeadzoneHighlight = true -- Set the default index
+			BlizzFaderDB.enableDeadzoneHighlight = defaultBlizzFaderDB.enableDeadzoneHighlight -- Set the default index
 		end
 			return BlizzFaderDB.enableDeadzoneHighlight
           end,
@@ -145,7 +165,7 @@ yellowBorderColor = {
     width = "full",
     get = function()
 		if BlizzFaderDB.DisableEnemySpells == nil then
-			BlizzFaderDB.DisableEnemySpells = false -- Set the default index for the harmful spells
+			BlizzFaderDB.DisableEnemySpells = defaultBlizzFaderDB.DisableEnemySpells -- Set the default index for the harmful spells
 		end
         return BlizzFaderDB.DisableEnemySpells
     end,
@@ -163,7 +183,7 @@ yellowBorderColor = {
     desc = "Set the range based on harmful spells",
     get = function()
 		if BlizzFaderDB.DruidEnemy == nil then
-            BlizzFaderDB.DruidEnemy = 2 -- Set the default index for the harmful spells
+            BlizzFaderDB.DruidEnemy = defaultBlizzFaderDB.DruidEnemy -- Set the default index for the harmful spells
         end
         return BlizzFaderDB.DruidEnemy
     end,
@@ -199,7 +219,7 @@ yellowBorderColor = {
     desc = "Set the range based on harmful spells",
     get = function()
 		if BlizzFaderDB.ShamanEnemy == nil then
-            BlizzFaderDB.ShamanEnemy = 1 -- Set the default index for the friendly spells
+            BlizzFaderDB.ShamanEnemy = defaultBlizzFaderDB.ShamanEnemy -- Set the default index for the friendly spells
         end
         return BlizzFaderDB.ShamanEnemy
     end,
@@ -213,6 +233,8 @@ yellowBorderColor = {
 	"|TInterface\\Icons\\Spell_Nature_Purge:15:15|t 30m (lvl 12)", 
 	-- Earth Shock
 	"|TInterface\\Icons\\Spell_Nature_EarthShock:15:15|t 20m (25m Gladiator Gloves)]",
+	-- Stormstrike
+	"|TInterface\\Icons\\Ability_Shaman_Stormstrike:15:15|t 5m (lvl 40)]",
     },
     order = 1,
     width = "full",
@@ -231,7 +253,7 @@ yellowBorderColor = {
     desc = "Set the range based on harmful spells",
     get = function()
 		if BlizzFaderDB.MageEnemy == nil then
-            BlizzFaderDB.MageEnemy = 1 -- Set the default index for the friendly spells
+            BlizzFaderDB.MageEnemy = defaultBlizzFaderDB.MageEnemy -- Set the default index for the friendly spells
         end
         return BlizzFaderDB.MageEnemy
     end,
@@ -267,7 +289,7 @@ yellowBorderColor = {
     desc = "Set the range based on harmful spells",
     get = function()
 		if BlizzFaderDB.WarlockEnemy == nil then
-            BlizzFaderDB.WarlockEnemy = 1 -- Set the default index for the friendly spells
+            BlizzFaderDB.WarlockEnemy = defaultBlizzFaderDB.WarlockEnemy -- Set the default index for the friendly spells
         end
         return BlizzFaderDB.WarlockEnemy
     end,
@@ -303,7 +325,7 @@ yellowBorderColor = {
     desc = "Set the range based on harmful spells",
     get = function()
 		if BlizzFaderDB.RogueEnemy == nil then
-            BlizzFaderDB.RogueEnemy = 2 -- Set the default index for the friendly spells
+            BlizzFaderDB.RogueEnemy = defaultBlizzFaderDB.RogueEnemy -- Set the default index for the friendly spells
         end
         return BlizzFaderDB.RogueEnemy
     end,
@@ -335,9 +357,152 @@ yellowBorderColor = {
     },
 	
 	
-   
-	},
-	},
+	PriestEnemy = {
+    type = "select",
+    name = "Harmful Spells",
+    desc = "Set the range based on harmful spells",
+    get = function()
+		if BlizzFaderDB.PriestEnemy == nil then
+            BlizzFaderDB.PriestEnemy = defaultBlizzFaderDB.PriestEnemy -- Set the default index for the friendly spells
+        end
+        return BlizzFaderDB.PriestEnemy
+    end,
+    set = function(info, value)
+        BlizzFaderDB.PriestEnemy = value;
+    end,
+    values = {
+    -- Smite
+    "|TInterface\\Icons\\Spell_Holy_HolySmite:15:15|t 30m (33m, 36m Holy Reach)",
+    -- Shadow Word: Pain
+	"|TInterface\\Icons\\Spell_Shadow_ShadowWordPain:15:15|t 30m (lvl 4, 33m, 36m Shadow Reach)", 
+	  -- Shoot
+	"|TInterface\\Icons\\Ability_ShootWand:15:15|t 30m", 
+	 -- Mind Flay
+	 "|TInterface\\Icons\\Spell_Shadow_SiphonMana:15:15|t 20m (lvl 20, 22m, 24m Grim Reach)",
+	 -- Mind Control
+	 "|TInterface\\Icons\\Spell_Shadow_ShadowWordDominate:15:15|t 20m (lvl 30)",
+    },
+    order = 1,
+	width = "full",
+    hidden = function()
+        return select(2, UnitClass("player")) ~= "PRIEST"
+    end,
+    disabled = function()
+        return BlizzFaderDB.DisableEnemySpells
+    end,
+    },
+	
+	
+	HunterEnemy = {
+    type = "select",
+    name = "Harmful Spells",
+    desc = "Set the range based on harmful spells",
+    get = function()
+		if BlizzFaderDB.HunterEnemy == nil then
+            BlizzFaderDB.HunterEnemy = defaultBlizzFaderDB.HunterEnemy -- Set the default index for the friendly spells
+        end
+        return BlizzFaderDB.HunterEnemy
+    end,
+    set = function(info, value)
+        BlizzFaderDB.HunterEnemy = value;
+    end,
+    values = {
+    -- Hunter's Mark
+    "|TInterface\\Icons\\Ability_Hunter_SniperShot:15:15|t 100m",
+    -- Kill Command
+    "|TInterface\\Icons\\Ability_Hunter_KillCommand:15:15|t 45m (lvl 66)",
+    -- Auto Shot
+    "|TInterface\\Icons\\Ability_Whirlwind:15:15|t 5-35m (37m, 39m, 41m Hawk Eye)",
+    -- Throw
+    "|TInterface\\Icons\\Ability_Throw:15:15|t 30m",
+    -- Scatter Shot
+	"|TInterface\\Icons\\Ability_GolemStormBolt:15:15|t 15m (lvl 30, 17m, 19m, 21m Hawk Eye)", 
+	  -- Wing clip
+	"|TInterface\\Icons\\Ability_Rogue_Trip:15:15|t 5m (lvl 12)",
+    },
+    order = 1,
+	width = "full",
+    hidden = function()
+        return select(2, UnitClass("player")) ~= "HUNTER"
+    end,
+    disabled = function()
+        return BlizzFaderDB.DisableEnemySpells
+    end,
+    },
+	
+	
+	PaladinEnemy = {
+    type = "select",
+    name = "Harmful Spells",
+    desc = "Set the range based on harmful spells",
+    get = function()
+		if BlizzFaderDB.PaladinEnemy == nil then
+            BlizzFaderDB.PaladinEnemy = defaultBlizzFaderDB.PaladinEnemy -- Set the default index for the friendly spells
+        end
+        return BlizzFaderDB.PaladinEnemy
+    end,
+    set = function(info, value)
+        BlizzFaderDB.PaladinEnemy = value;
+    end,
+    values = {
+    -- Hammer of Wrath
+    "|TInterface\\Icons\\Ability_ThunderClap:15:15|t 30m (lvl 44)",
+    -- Turn Undead
+    "|TInterface\\Icons\\Spell_Holy_TurnUndead:15:15|t 20m (lvl 24, Undead only)",
+    -- Holy Shock
+    "|TInterface\\Icons\\Spell_Holy_SearingLight:15:15|t 20m (lvl 40)",
+	-- Repentance
+    "|TInterface\\Icons\\Spell_Holy_PrayerOfHealing:15:15|t 20m (lvl 40, Humanoid only)",
+    -- Judgement
+    "|TInterface\\Icons\\Spell_Holy_RighteousFury:15:15|t 10m (lvl 4)",
+    -- Crusader Strike
+    "|TInterface\\Icons\\Spell_Holy_CrusaderStrike:15:15|t 5m (lvl 50)",
+    },
+    order = 1,
+	width = "full",
+    hidden = function()
+        return select(2, UnitClass("player")) ~= "PALADIN"
+    end,
+    disabled = function()
+        return BlizzFaderDB.DisableEnemySpells
+    end,
+    },
+	
+	
+	WarriorEnemy = {
+    type = "select",
+    name = "Harmful Spells",
+    desc = "Set the range based on harmful spells",
+    get = function()
+		if BlizzFaderDB.WarriorEnemy == nil then
+            BlizzFaderDB.WarriorEnemy = defaultBlizzFaderDB.WarriorEnemy -- Set the default index for the friendly spells
+        end
+        return BlizzFaderDB.WarriorEnemy
+    end,
+    set = function(info, value)
+        BlizzFaderDB.WarriorEnemy = value;
+    end,
+    values = {
+    -- Shoot
+    "|TInterface\\Icons\\Ability_Marksmanship:15:15|t 5-30m",
+    -- Charge
+    "|TInterface\\Icons\\Ability_Warrior_Charge:15:15|t 8-25m (lvl 4)",
+    -- Intimidating Shout
+	  "|TInterface\\Icons\\Ability_GolemThunderClap:15:15|t 10m (lvl 22)", 
+	  -- Rend
+	 "|TInterface\\Icons\\ability_gouge:15:15|t 5m (lvl 4)",
+    },
+    order = 1,
+	width = "full",
+    hidden = function()
+        return select(2, UnitClass("player")) ~= "WARRIOR"
+    end,
+    disabled = function()
+        return BlizzFaderDB.DisableEnemySpells
+    end,
+    },
+  },
+},
 
 
    RangeFriendly = {
@@ -356,7 +521,7 @@ yellowBorderColor = {
     -- width = "full",
     get = function()
 		if BlizzFaderDB.DisableFriendlySpells == nil then
-			BlizzFaderDB.DisableFriendlySpells = false -- Set the default index for the harmful spells
+			BlizzFaderDB.DisableFriendlySpells = defaultBlizzFaderDB.DisableFriendlySpells -- Set the default index for the harmful spells
 		end
         return BlizzFaderDB.DisableFriendlySpells
     end,
@@ -371,7 +536,7 @@ yellowBorderColor = {
     desc = "Set the range based on friendly spells",
     get = function()
 		if BlizzFaderDB.DruidFriendly == nil then
-            BlizzFaderDB.DruidFriendly = 1 -- Set the default index for the friendly spells
+            BlizzFaderDB.DruidFriendly = defaultBlizzFaderDB.DruidFriendly -- Set the default index for the friendly spells
         end
         return BlizzFaderDB.DruidFriendly
     end,
@@ -381,6 +546,8 @@ yellowBorderColor = {
     values = {
         -- Healing Touch
         "|TInterface\\Icons\\Spell_Nature_HealingTouch:15:15|t 40m",
+		-- Thorns
+        "|TInterface\\Icons\\Spell_Nature_Thorns:15:15|t 30m (lvl 6, 33m, 36m Nature's Reach)",
         -- Mark of the Wild
         "|TInterface\\Icons\\Spell_Nature_Regeneration:15:15|t 30m",
     },
@@ -400,7 +567,7 @@ yellowBorderColor = {
     desc = "Set the range based on friendly spells",
     get = function()
 		if BlizzFaderDB.ShamanFriendly == nil then
-            BlizzFaderDB.ShamanFriendly = 1 -- Set the default index for the friendly spells
+            BlizzFaderDB.ShamanFriendly = defaultBlizzFaderDB.ShamanFriendly -- Set the default index for the friendly spells
         end
         return BlizzFaderDB.ShamanFriendly
     end,
@@ -411,7 +578,7 @@ yellowBorderColor = {
     -- Healing Wave   
     "|TInterface\\Icons\\Spell_Nature_HealingWaveGreater:15:15|t 40m", 
     -- Ancestral Spirit
-	"|TInterface\\Icons\\Spell_Nature_Regenerate:15:15|t 30m(lvl 12)",
+	"|TInterface\\Icons\\Spell_Nature_Regenerate:15:15|t 30m (lvl 12)",
     },
     order = 1,
     width = "full",
@@ -429,7 +596,7 @@ yellowBorderColor = {
     desc = "Set the range based on friendly spells",
     get = function()
 		if BlizzFaderDB.MageFriendly == nil then
-            BlizzFaderDB.MageFriendly = 2 -- Set the default index for the friendly spells
+            BlizzFaderDB.MageFriendly = defaultBlizzFaderDB.MageFriendly -- Set the default index for the friendly spells
         end
         return BlizzFaderDB.MageFriendly
     end,
@@ -459,7 +626,7 @@ yellowBorderColor = {
     desc = "Set the range based on friendly spells",
     get = function()
 		if BlizzFaderDB.WarlockFriendly == nil then
-            BlizzFaderDB.WarlockFriendly = 1 -- Set the default index for the friendly spells
+            BlizzFaderDB.WarlockFriendly = defaultBlizzFaderDB.WarlockFriendly -- Set the default index for the friendly spells
         end
         return BlizzFaderDB.WarlockFriendly
     end,
@@ -487,7 +654,7 @@ yellowBorderColor = {
     desc = "Set the range based on friendly spells",
     get = function()
 		if BlizzFaderDB.RogueFriendly == nil then
-            BlizzFaderDB.RogueFriendly = 1 -- Set the default index for the friendly spells
+            BlizzFaderDB.RogueFriendly = defaultBlizzFaderDB.RogueFriendly -- Set the default index for the friendly spells
         end
         return BlizzFaderDB.RogueFriendly
     end,
@@ -502,6 +669,132 @@ yellowBorderColor = {
 	width = "full",
     hidden = function()
         return select(2, UnitClass("player")) ~= "ROGUE"
+    end,
+    disabled = function()
+        return BlizzFaderDB.DisableFriendlySpells
+    end,
+    },
+	
+	
+	PriestFriendly = {
+    type = "select",
+    name = "Friendly Spells",
+    desc = "Set the range based on friendly spells",
+    get = function()
+		if BlizzFaderDB.PriestFriendly == nil then
+            BlizzFaderDB.PriestFriendly = defaultBlizzFaderDB.PriestEnemy -- Set the default index for the friendly spells
+        end
+        return BlizzFaderDB.PriestFriendly
+    end,
+    set = function(info, value)
+        BlizzFaderDB.PriestFriendly = value;
+    end,
+    values = {
+    -- Lesser Heal
+    "|TInterface\\Icons\\Spell_Holy_Renew:15:15|t 40m",
+    -- Power Word: Fortitude
+    "|TInterface\\Icons\\Spell_Holy_WordFortitude:15:15|t 30m",
+    },
+    order = 1,
+	width = "full",
+    hidden = function()
+        return select(2, UnitClass("player")) ~= "PRIEST"
+    end,
+    disabled = function()
+        return BlizzFaderDB.DisableFriendlySpells
+    end,
+    },
+	
+	
+	HunterFriendly = {
+    type = "select",
+    name = "Friendly Spells",
+    desc = "Set the range based on friendly spells",
+    get = function()
+		if BlizzFaderDB.HunterFriendly == nil then
+            BlizzFaderDB.HunterFriendly = defaultBlizzFaderDB.HunterFriendly -- Set the default index for the friendly spells
+        end
+        return BlizzFaderDB.HunterFriendly
+    end,
+    set = function(info, value)
+        BlizzFaderDB.HunterFriendly = value;
+    end,
+    values = {
+    -- Misdirection
+    "|TInterface\\Icons\\Ability_Hunter_Misdirection:15:15|t 100m (lvl 70 only)",
+    -- Mend pet
+    "|TInterface\\Icons\\Ability_Hunter_MendPet:15:15|t 45m (lvl 12)",
+     -- Bandage
+    "|TInterface\\Icons\\INV_Misc_Bandage_Netherweave_Heavy:15:15|t 15m",
+    -- Dismiss pet
+    "|TInterface\\Icons\\Spell_Nature_SpiritWolf:15:15|t 10m (lvl 10)",
+    },
+    order = 1,
+	width = "full",
+    hidden = function()
+        return select(2, UnitClass("player")) ~= "HUNTER"
+    end,
+    disabled = function()
+        return BlizzFaderDB.DisableFriendlySpells
+    end,
+    },
+	
+	
+	PaladinFriendly = {
+    type = "select",
+    name = "Friendly Spells",
+    desc = "Set the range based on friendly spells",
+    get = function()
+		if BlizzFaderDB.PaladinFriendly == nil then
+            BlizzFaderDB.PaladinFriendly = defaultBlizzFaderDB.PaladinFriendly -- Set the default index for the friendly spells
+        end
+        return BlizzFaderDB.PaladinFriendly
+    end,
+    set = function(info, value)
+        BlizzFaderDB.PaladinFriendly = value;
+    end,
+    values = {
+    -- Holy Light
+    "|TInterface\\Icons\\Spell_Holy_HolyBolt:15:15|t 40m",
+    -- Blessing of Might
+    "|TInterface\\Icons\\Spell_Holy_FistOfJustice:15:15|t 30m (lvl 4)",
+    -- Holy Shock
+    "|TInterface\\Icons\\Spell_Holy_SearingLight:15:15|t 20m (lvl 40)",
+    },
+    order = 1,
+	width = "full",
+    hidden = function()
+        return select(2, UnitClass("player")) ~= "PALADIN"
+    end,
+    disabled = function()
+        return BlizzFaderDB.DisableFriendlySpells
+    end,
+    },
+	
+	
+	WarriorFriendly = {
+    type = "select",
+    name = "Friendly Spells",
+    desc = "Set the range based on friendly spells",
+    get = function()
+		if BlizzFaderDB.WarriorFriendly == nil then
+            BlizzFaderDB.WarriorFriendly = defaultBlizzFaderDB.WarriorFriendly -- Set the default index for the friendly spells
+        end
+        return BlizzFaderDB.WarriorFriendly
+    end,
+    set = function(info, value)
+        BlizzFaderDB.WarriorFriendly = value;
+    end,
+    values = {
+    -- Intervene
+    "|TInterface\\Icons\\Ability_Warrior_VictoryRush:15:15|t 25m (lvl 70 only)",
+    -- Bandage
+    "|TInterface\\Icons\\INV_Misc_Bandage_Netherweave_Heavy:15:15|t 15m",
+    },
+    order = 1,
+	width = "full",
+    hidden = function()
+        return select(2, UnitClass("player")) ~= "WARRIOR"
     end,
     disabled = function()
         return BlizzFaderDB.DisableFriendlySpells
@@ -640,101 +933,136 @@ local function UpdateFrames()
 
                 -- [SHAMAN]
                 elseif BlizzFaderDB.ShamanEnemy == 1 and select(2, UnitClass("player")) == "SHAMAN" then 
-                    -- Lightning Bolt 
-                    if IsSpellInRange(403) then
-                    inRange = IsSpellInRange(403, unit) == 1
-                    else
-						           inRange = true
-				           	end
+                    -- Lightning Bolt
+					-- Check if within melee range for Voodoo Charm item or Stormstrike
+					if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(32176, unit) == nil) or (IsSpellInRange(32176, unit) == 1)  then
+                        inMeleeRange = true
+                    -- Check if out of range for Lightning Bolt
+                    elseif IsSpellInRange(403, unit) == 0 then
+                        inRange = false
+                    end
                 elseif BlizzFaderDB.ShamanEnemy == 2 and select(2, UnitClass("player")) == "SHAMAN" then 
                     -- Purge
-                    if IsSpellInRange(370) then
-                    inRange = IsSpellInRange(370, unit) == 1
-                    else
-						           inRange = true
-				           	end
+                    -- Check if within melee range for Voodoo Charm item or Stormstrike
+                    if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(32176, unit) == nil) or (IsSpellInRange(32176, unit) == 1)  then 
+                        inMeleeRange = true
+                    -- Check if out of range for Purge
+                    elseif IsSpellInRange(370, unit) == 0 then
+                        inRange = false
+                    end
                 elseif BlizzFaderDB.ShamanEnemy == 3 and select(2, UnitClass("player")) == "SHAMAN" then 
                     -- Earth Shock
-                    if IsSpellInRange(8042) then
-                    inRange = IsSpellInRange(8042, unit) == 1
-                    else
-						           inRange = true
-				           	end
+                    -- Check if within melee range for Voodoo Charm item or Stormstrike
+                    if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(32176, unit) == nil) or (IsSpellInRange(32176, unit) == 1)  then
+                        inMeleeRange = true
+                    -- Check if out of range for Earth Shock
+                    elseif IsSpellInRange(8042, unit) == 0 then
+                        inRange = false
+                    end
+				elseif BlizzFaderDB.ShamanEnemy == 4 and select(2, UnitClass("player")) == "SHAMAN" then 
+                    -- Stormstrike
+                    -- Check if within melee range for Voodoo Charm item or Stormstrike
+                    if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(32176, unit) == nil) or (IsSpellInRange(32176, unit) == 1)  then
+                        inMeleeRange = true
+                    -- Check if out of range for Stormstrike
+                    elseif IsSpellInRange(32176, unit) == 0 then
+                        inRange = false
+                    end
 					
 				
 				-- [MAGE]
                 elseif BlizzFaderDB.MageEnemy == 1 and select(2, UnitClass("player")) == "MAGE" then 
                     -- Fireball 
-                    if IsSpellInRange(133) then
-                    inRange = IsSpellInRange(133, unit) == 1
-                    else
-						           inRange = true
-				           	end
+                    -- Check if within melee range for Voodoo Charm item
+                    if IsItemInRange(8149, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Fireball
+                    elseif IsSpellInRange(133, unit) == 0 then
+                        inRange = false
+                    end
                 elseif BlizzFaderDB.MageEnemy == 2 and select(2, UnitClass("player")) == "MAGE" then 
                     -- Frost Bolt
-                    if IsSpellInRange(116) then
-                    inRange = IsSpellInRange(116, unit) == 1
-                    else
-						           inRange = true
-				           	end
+                    -- Check if within melee range for Voodoo Charm item
+                    if IsItemInRange(8149, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Frost bolt
+                    elseif IsSpellInRange(116, unit) == 0 then
+                        inRange = false
+                    end
                 elseif BlizzFaderDB.MageEnemy == 3 and select(2, UnitClass("player")) == "MAGE" then 
                     -- Scorch
-                    if IsSpellInRange(2948) then
-                    inRange = IsSpellInRange(2948, unit) == 1
-                    else
-						           inRange = true
-				           	end
+                    -- Check if within melee range for Voodoo Charm item
+                    if IsItemInRange(8149, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Scorch
+                    elseif IsSpellInRange(2948, unit) == 0 then
+                        inRange = false
+                    end
                 elseif BlizzFaderDB.MageEnemy == 4 and select(2, UnitClass("player")) == "MAGE" then 
                     -- Shoot
-                    if IsSpellInRange(5019) then
-                    inRange = IsSpellInRange(5019, unit) == 1
-                    else
-						           inRange = true
-				           	end
+                   -- Check if within melee range for Voodoo Charm item
+                    if IsItemInRange(8149, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Shoot
+                    elseif IsSpellInRange(5019, unit) == 0 then
+                        inRange = false
+                    end
                 elseif BlizzFaderDB.MageEnemy == 5 and select(2, UnitClass("player")) == "MAGE" then 
                     -- Fire Blast
-                    if IsSpellInRange(2136) then
-                    inRange = IsSpellInRange(2136, unit) == 1
-					           else
-						           inRange = true
-				           	end
+                    -- Check if within melee range for Voodoo Charm item
+                    if IsItemInRange(8149, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Fire Blast
+                    elseif IsSpellInRange(2136, unit) == 0 then
+                        inRange = false
+                    end
 				
 				-- [WARLOCK]
                 elseif BlizzFaderDB.WarlockEnemy == 1 and select(2, UnitClass("player")) == "WARLOCK" then 
                     -- Immolate 
-                    if IsSpellInRange(348) then
-                    inRange = IsSpellInRange(348, unit) == 1
-                    else
-						           inRange = true
-				           	end
+                    -- Check if within melee range for Voodoo Charm item
+                    if IsItemInRange(8149, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Immolate
+                    elseif IsSpellInRange(348, unit) == 0 then
+                        inRange = false
+                    end
                 elseif BlizzFaderDB.WarlockEnemy == 2 and select(2, UnitClass("player")) == "WARLOCK" then 
                     -- Corruption
-                    if IsSpellInRange(172) then
-                    inRange = IsSpellInRange(172, unit) == 1
-                    else
-						           inRange = true
-				           	end
+                    -- Check if within melee range for Voodoo Charm item
+                    if IsItemInRange(8149, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Corruption 
+                    elseif IsSpellInRange(172, unit) == 0 then
+                        inRange = false
+                    end
                 elseif BlizzFaderDB.WarlockEnemy == 3 and select(2, UnitClass("player")) == "WARLOCK" then 
                     -- Shoot
-                    if IsSpellInRange(5019) then
-                    inRange = IsSpellInRange(5019, unit) == 1
-                    else
-						           inRange = true
-				           	end
+                    -- Check if within melee range for Voodoo Charm item
+                    if IsItemInRange(8149, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Shoot
+                    elseif IsSpellInRange(5019, unit) == 0 then
+                        inRange = false
+                    end
                 elseif BlizzFaderDB.WarlockEnemy == 4 and select(2, UnitClass("player")) == "WARLOCK" then 
                     -- Fear
-                    if IsSpellInRange(5782) then
-                    inRange = IsSpellInRange(5782, unit) == 1
-                    else
-						           inRange = true
-				           	end
+                    -- Check if within melee range for Voodoo Charm item
+                    if IsItemInRange(8149, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Fear
+                    elseif IsSpellInRange(5782, unit) == 0 then
+                        inRange = false
+                    end
                 elseif BlizzFaderDB.WarlockEnemy == 5 and select(2, UnitClass("player")) == "WARLOCK" then 
                     -- Shadowburn 
-                    if IsSpellInRange(17877) then
-						inRange = IsSpellInRange(17877, unit) == 1
-					else
-						inRange = true
-					end
+                    -- Check if within melee range for Voodoo Charm item
+                    if IsItemInRange(8149, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Shadowburn
+                    elseif IsSpellInRange(17877, unit) == 0 then
+                        inRange = false
+                    end
 				
 				
 				-- [ROGUE]
@@ -796,7 +1124,208 @@ local function UpdateFrames()
                     elseif IsSpellInRange(2098, unit) == 0 then
                         inRange = false
                     end
-                end
+					
+					
+				-- [PRIEST]
+                elseif BlizzFaderDB.PriestEnemy == 1 and select(2, UnitClass("player")) == "PRIEST" then 
+                    -- Smite 
+                    -- Check if within melee range for Voodoo Charm item
+                    if IsItemInRange(8149, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Smite
+                    elseif IsSpellInRange(585, unit) == 0 then
+                        inRange = false
+                    end
+                elseif BlizzFaderDB.PriestEnemy == 2 and select(2, UnitClass("player")) == "PRIEST" then 
+                    -- Shadow Word: Pain
+                    -- Check if within melee range for Voodoo Charm item
+                    if IsItemInRange(8149, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Shadow Word: Pain
+                    elseif IsSpellInRange(589, unit) == 0 then
+                        inRange = false
+                    end
+                elseif BlizzFaderDB.PriestEnemy == 3 and select(2, UnitClass("player")) == "PRIEST" then 
+                    -- Shoot
+                    -- Check if within melee range for Voodoo Charm item
+                    if IsItemInRange(8149, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Shoot
+                    elseif IsSpellInRange(5019, unit) == 0 then
+                        inRange = false
+                    end
+                elseif BlizzFaderDB.PriestEnemy == 4 and select(2, UnitClass("player")) == "PRIEST" then 
+                    -- Mind Flay
+                    -- Check if within melee range for Voodoo Charm item
+                    if IsItemInRange(8149, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Mind Flay
+                    elseif IsSpellInRange(15407, unit) == 0 then
+                        inRange = false
+                    end
+                    elseif BlizzFaderDB.PriestEnemy == 5 and select(2, UnitClass("player")) == "PRIEST" then 
+                    -- Mind Control
+                    -- Check if within melee range for Voodoo Charm item
+                    if IsItemInRange(8149, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Mind Control
+                    elseif IsSpellInRange(605, unit) == 0 then
+                        inRange = false
+                    end
+					
+					
+					-- [HUNTER]
+                elseif BlizzFaderDB.HunterEnemy == 1 and select(2, UnitClass("player")) == "HUNTER" then 
+                    -- Hunter's Mark
+                    -- Check if within melee range for Wing clip
+                    if IsSpellInRange(2974, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Hunter's Mark
+                    elseif IsSpellInRange(1130, unit) == 0 then
+                        inRange = false
+                    end
+                elseif BlizzFaderDB.HunterEnemy == 2 and select(2, UnitClass("player")) == "HUNTER" then 
+                    -- Kill Command
+                    -- Check if within melee range for Wing clip
+                    if IsSpellInRange(2974, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Kill Command
+                    elseif IsSpellInRange(34026, unit) == 0 then
+                        inRange = false
+                    end
+                elseif BlizzFaderDB.HunterEnemy == 3 and select(2, UnitClass("player")) == "HUNTER" then 
+                    -- Auto Shot
+                    -- Check if within melee range for Wing clip
+                    if IsSpellInRange(2974, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Auto Shot
+                    elseif IsSpellInRange(75, unit) == 0 then
+                        inRange = false
+                    end
+               elseif BlizzFaderDB.HunterEnemy == 4 and select(2, UnitClass("player")) == "HUNTER" then 
+                    -- Throw
+                    -- Check if within melee range for Wing clip
+                    if IsSpellInRange(2974, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Throw
+                    elseif IsSpellInRange(2764, unit) == 0 then
+                        inRange = false
+                    end                    
+                elseif BlizzFaderDB.HunterEnemy == 5 and select(2, UnitClass("player")) == "HUNTER" then 
+                    -- Scatter Shot
+                    -- Check if within melee range for Wing clip
+                    if IsSpellInRange(2974, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Scatter Shot
+                    elseif IsSpellInRange(19503, unit) == 0 then
+                        inRange = false
+                    end                    
+                 elseif BlizzFaderDB.HunterEnemy == 6 and select(2, UnitClass("player")) == "HUNTER" then 
+                    -- Wing clip
+                    -- Check if within melee range for Wing clip
+                    if IsSpellInRange(2974, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Scatter Shot
+                    elseif IsSpellInRange(2974, unit) == 0 then
+                        inRange = false
+                    end
+				
+				
+				-- [PALADIN]
+                elseif BlizzFaderDB.PaladinEnemy == 1 and select(2, UnitClass("player")) == "PALADIN" then 
+                    -- Hammer of Wrath
+                    -- Check if within melee range for Voodoo Charm item or Crusader Strike
+					if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(35395, unit) == nil) or (IsSpellInRange(35395, unit) == 1)  then
+						inMeleeRange = true
+                    -- Check if out of range for Hammer of Wrath
+                    elseif IsSpellInRange(24275, unit) == 0 then
+                        inRange = false
+                    end
+                elseif BlizzFaderDB.PaladinEnemy == 2 and select(2, UnitClass("player")) == "PALADIN" then 
+                    -- Turn Undead
+                    -- Check if within melee range for Voodoo Charm item or Crusader Strike
+					if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(35395, unit) == nil) or (IsSpellInRange(35395, unit) == 1)  then
+						inMeleeRange = true
+                    -- Check if out of range for Turn Undead
+                    elseif IsSpellInRange(2878, unit) == 0 then
+                        inRange = false
+                    end
+                elseif BlizzFaderDB.PaladinEnemy == 3 and select(2, UnitClass("player")) == "PALADIN" then 
+                    -- Holy Shock
+                     -- Check if within melee range for Voodoo Charm item or Crusader Strike
+					if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(35395, unit) == nil) or (IsSpellInRange(35395, unit) == 1)  then
+						inMeleeRange = true
+                    -- Check if out of range for Holy Shock
+                    elseif IsSpellInRange(20473, unit) == 0 then
+                        inRange = false
+                    end
+				elseif BlizzFaderDB.PaladinEnemy == 4 and select(2, UnitClass("player")) == "PALADIN" then 
+                    -- Repentance
+                     -- Check if within melee range for Voodoo Charm item or Crusader Strike
+					if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(35395, unit) == nil) or (IsSpellInRange(35395, unit) == 1)  then
+						inMeleeRange = true
+                    -- Check if out of range for Repentance
+                    elseif IsSpellInRange(20066, unit) == 0 then
+                        inRange = false
+                    end
+                elseif BlizzFaderDB.PaladinEnemy == 5 and select(2, UnitClass("player")) == "PALADIN" then 
+                    -- Judgement
+                     -- Check if within melee range for Voodoo Charm item or Crusader Strike
+					if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(35395, unit) == nil) or (IsSpellInRange(35395, unit) == 1)  then
+						inMeleeRange = true
+                    -- Check if out of range for Judgement
+                    elseif IsSpellInRange(20271, unit) == 0 then
+                        inRange = false
+                    end
+               elseif BlizzFaderDB.PaladinEnemy == 6 and select(2, UnitClass("player")) == "PALADIN" then 
+                    -- Crusader Strike
+                    -- Check if within melee range for Crusader Strike
+                   if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(35395, unit) == nil) or (IsSpellInRange(35395, unit) == 1)  then
+						inMeleeRange = true
+                    -- Check if out of range for Crusader Strike
+                    elseif IsSpellInRange(35395, unit) == 0 then
+                        inRange = false
+                    end
+				
+				
+				-- [WARRIOR]
+                elseif BlizzFaderDB.WarriorEnemy == 1 and select(2, UnitClass("player")) == "WARRIOR" then 
+                    -- Shoot
+                    -- Check if within melee range for Rend
+                    if IsSpellInRange(772, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Shoot
+                    elseif IsSpellInRange(3018, unit) == 0 then
+                        inRange = false
+                    end
+                elseif BlizzFaderDB.WarriorEnemy == 2 and select(2, UnitClass("player")) == "WARRIOR" then 
+                    -- Charge
+                   -- Check if within melee range for Rend
+                    if IsSpellInRange(772, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Charge
+                    elseif IsSpellInRange(100, unit) == 0 then
+                        inRange = false
+                    end
+                elseif BlizzFaderDB.WarriorEnemy == 3 and select(2, UnitClass("player")) == "WARRIOR" then 
+                    -- Intimidating Shout
+                    -- Check if within melee range for Rend
+                    if IsSpellInRange(772, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Intimidating Shout
+                    elseif IsSpellInRange(5246, unit) == 0 then
+                        inRange = false
+                    end
+                elseif BlizzFaderDB.WarriorEnemy == 4 and select(2, UnitClass("player")) == "WARRIOR" then 
+                    -- Rend
+					-- Check if within melee range for Rend
+                    if IsSpellInRange(772, unit) == 1 then
+                        inMeleeRange = true
+                    -- Check if out of range for Heroic Strike
+                    elseif IsSpellInRange(772, unit) == 0 then
+                        inRange = false
+                    end	
+			    end
 				
 				-- Check if within deadzone range (5-8m)
 				if IsItemInRange(34368, unit) == 1 then
@@ -838,7 +1367,12 @@ local function UpdateFrames()
 					if IsSpellInRange(5185, unit) == 0 then
                         inRange = false
 					end
-                elseif BlizzFaderDB.DruidFriendly == 2 and select(2, UnitClass("player")) == "DRUID" then
+				elseif BlizzFaderDB.DruidFriendly == 2 and select(2, UnitClass("player")) == "DRUID" then
+                    -- Thorns
+                    if IsSpellInRange(467, unit) == 0 then
+                        inRange = false
+					end
+                elseif BlizzFaderDB.DruidFriendly == 3 and select(2, UnitClass("player")) == "DRUID" then
                     -- Mark of the Wild
 					if IsSpellInRange(1126, unit) == 0 then
                         inRange = false
@@ -846,12 +1380,12 @@ local function UpdateFrames()
 
 
                 -- [SHAMAN]
-               elseif BlizzFaderDB.DruidFriendly == 1 and select(2, UnitClass("player")) == "SHAMAN" then
+               elseif BlizzFaderDB.ShamanFriendly == 1 and select(2, UnitClass("player")) == "SHAMAN" then
                     -- Healing Wave
                     if IsSpellInRange(331, unit) == 0 then
                         inRange = false
 					end
-               elseif BlizzFaderDB.DruidFriendly == 2 and select(2, UnitClass("player")) == "SHAMAN" then
+               elseif BlizzFaderDB.ShamanFriendly == 2 and select(2, UnitClass("player")) == "SHAMAN" then
                     -- Ancestral Spirit
 					if IsSpellInRange(2008, unit) == 0 then
                         inRange = false
@@ -882,9 +1416,76 @@ local function UpdateFrames()
 				-- [ROGUE]
                elseif BlizzFaderDB.RogueFriendly == 1 and select(2, UnitClass("player")) == "ROGUE" then
                     -- Bandage
-					if IsSpellInRange(21991, unit) == 0 then
+					if IsItemInRange(21991, unit) == 0 then
                         inRange = false
 					end
+					
+					
+				-- [PRIEST]
+               elseif BlizzFaderDB.PriestFriendly == 1 and select(2, UnitClass("player")) == "PRIEST" then
+                    -- Lesser Heal
+                    if IsSpellInRange(2050, unit) == 0 then
+                        inRange = false
+					           end
+                elseif BlizzFaderDB.PriestFriendly == 2 and select(2, UnitClass("player")) == "PRIEST" then
+                    -- Power Word: Fortitude
+                    if IsSpellInRange(1243, unit) == 0 then
+                        inRange = false
+					end	
+						
+					
+				-- [HUNTER]
+               elseif BlizzFaderDB.HunterFriendly == 1 and select(2, UnitClass("player")) == "HUNTER" then
+                    -- Misdirection 
+                    if IsSpellInRange(34477, unit) == 0 then
+                        inRange = false
+					 end
+               elseif BlizzFaderDB.HunterFriendly == 2 and select(2, UnitClass("player")) == "HUNTER" then
+                    -- Mend pet
+                    if IsSpellInRange(136, unit) == 0 then
+                        inRange = false
+					end
+               elseif BlizzFaderDB.HunterFriendly == 3 and select(2, UnitClass("player")) == "HUNTER" then
+                    -- Bandage 
+                    if IsItemInRange(21991, unit) == 0 then
+                        inRange = false
+					end
+               elseif BlizzFaderDB.HunterFriendly == 4 and select(2, UnitClass("player")) == "HUNTER" then
+                    -- Dismiss pet
+                    if IsSpellInRange(2641, unit) == 0 then
+                        inRange = false
+					end
+				
+
+				-- [PALADIN]
+               elseif BlizzFaderDB.PaladinFriendly == 1 and select(2, UnitClass("player")) == "PALADIN" then
+                    -- Holy Light 
+                    if IsSpellInRange(635, unit) == 0 then
+                        inRange = false
+					end
+               elseif BlizzFaderDB.PaladinFriendly == 2 and select(2, UnitClass("player")) == "PALADIN" then
+                    -- Blessing of Might
+                    if IsSpellInRange(19740, unit) == 0 then
+                        inRange = false
+					end
+               elseif BlizzFaderDB.PaladinFriendly == 3 and select(2, UnitClass("player")) == "PALADIN" then
+                    -- Holy Shock 
+                    if IsSpellInRange(20473, unit) == 0 then
+                        inRange = false
+					end
+				
+				
+				-- [WARRIOR]
+               elseif BlizzFaderDB.WarriorFriendly == 1 and select(2, UnitClass("player")) == "WARRIOR" then
+                    -- Intervene
+                    if IsSpellInRange(3411, unit) == 0 then
+                        inRange = false
+					           end
+               elseif BlizzFaderDB.WarriorFriendly == 2 and select(2, UnitClass("player")) == "WARRIOR" then
+                    -- Bandage
+                    if IsSpellInRange(21991, unit) == 0 then
+                        inRange = false
+					           end			   			   
                 end
 			 
                 -- Fade out the frame if the player is out of range
