@@ -1517,6 +1517,13 @@ local function OnUpdate(self, elapsed)
 end
 
 local function OnEvent(self, event, ...)
+    --===== Check if BlizzFaderDB is empty, if yes then initialize deafults. =====--
+    if event == "PLAYER_ENTERING_WORLD" then
+        if not BlizzFaderDB.opacity then
+            BlizzFaderDB = defaultBlizzFaderDB 
+        end
+    end
+
     if event == "PLAYER_ENTERING_WORLD" or event == "PARTY_MEMBERS_CHANGED" then
         GetFrames()
         if frameCount > 0 then
