@@ -3,7 +3,7 @@
 ## Notes: Fade out/in the Party and TargetFrame when out of range based on your spells
 ## Author: Pixol modified by Macumba
 ## Version 1.1
-## SavedVariables: BlizzFaderDB
+## SavedVariablesPerCharacter: BlizzFaderDB
 
 embeds.xml
 

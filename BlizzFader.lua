@@ -1478,14 +1478,17 @@ local function UpdateFrames()
 				-- [WARRIOR]
                elseif BlizzFaderDB.WarriorFriendly == 1 and select(2, UnitClass("player")) == "WARRIOR" then
                     -- Intervene
-                    if IsSpellInRange(3411, unit) == 0 then
+					-- Check if within melee range for Attuned Crystal Cores item
+                    if IsItemInRange(34368, unit) == 1 then
+                        inRange = true
+                    elseif IsSpellInRange(3411, unit) == 0 then
                         inRange = false
-					           end
+					end
                elseif BlizzFaderDB.WarriorFriendly == 2 and select(2, UnitClass("player")) == "WARRIOR" then
                     -- Bandage
-                    if IsSpellInRange(21991, unit) == 0 then
+					if IsItemInRange(21991, unit) == 0 then
                         inRange = false
-					           end			   			   
+					end			   			   
                 end
 			 
                 -- Fade out the frame if the player is out of range
