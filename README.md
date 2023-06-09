@@ -14,6 +14,7 @@ You can also change those color for what you want.
 There is a GUI in interface - Option, or you can access it with "/bf" or "/blizzfader" command.
 - To change the Alpha of the Fade out feature
 - To disable / Enable Red melee range and Yellow Deadzone range
+- Change the color of Red melee range and Yellow Deadzone range
 - Disable the Fade out for Enemies Target
 - Choose a Spell for the range of the fade out
 - Disable the Fade out for Friendly Target / Party
@@ -51,3 +52,6 @@ Red Melee range indicator
 Yellow Deadzone range indicator
 ![image](https://github.com/Macumbafeh/BlizzFader/assets/47739411/764799df-baca-4ed5-b43c-e57e542ae707)
 ![image](https://github.com/Macumbafeh/BlizzFader/assets/47739411/273d8749-661f-45b9-bfab-7ac4b77020b9)
+
+
+Addon used for this Unit Frames : UnitFramesImproved_TBC
