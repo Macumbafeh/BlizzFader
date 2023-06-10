@@ -607,7 +607,9 @@ yellowBorderColor = {
     -- Arcane Brilliance
     "|TInterface\\Icons\\Spell_Holy_ArcaneIntellect:15:15|t 40m (lvl 56)",
      -- Arcane Intellect
-	"|TInterface\\Icons\\Spell_Holy_MagicalSentry:15:15|t 30m"
+	"|TInterface\\Icons\\Spell_Holy_MagicalSentry:15:15|t 30m",
+	-- Bandage
+    "|TInterface\\Icons\\INV_Misc_Bandage_Netherweave_Heavy:15:15|t 15m",
     },
     order = 1,
     width = "full",
@@ -636,6 +638,8 @@ yellowBorderColor = {
     values = {
     -- Unending Breath
     "|TInterface\\Icons\\Spell_Shadow_DemonBreath:15:15|t 30m (lvl 16)",
+	-- Bandage
+    "|TInterface\\Icons\\INV_Misc_Bandage_Netherweave_Heavy:15:15|t 15m",
     },
     order = 1,
     width = "full",
@@ -788,6 +792,8 @@ yellowBorderColor = {
     values = {
     -- Intervene
     "|TInterface\\Icons\\Ability_Warrior_VictoryRush:15:15|t 25m (lvl 70 only)",
+	-- Battle and Commanding Shout
+    "|TInterface\\Icons\\Ability_Warrior_BattleShout:15:15|t 20m",
     -- Bandage
     "|TInterface\\Icons\\INV_Misc_Bandage_Netherweave_Heavy:15:15|t 15m",
     },
@@ -1403,7 +1409,11 @@ local function UpdateFrames()
                     if IsSpellInRange(1459, unit) == 0 then
                         inRange = false
 					end
-				
+				elseif BlizzFaderDB.MageFriendly == 3 and select(2, UnitClass("player")) == "MAGE" then
+                    -- Bandage
+					if IsItemInRange(21991, unit) == 0 then
+                        inRange = false
+					end
 
 				-- [WARLOCK]
                elseif BlizzFaderDB.WarlockFriendly == 1 and select(2, UnitClass("player")) == "WARLOCK" then
@@ -1411,7 +1421,11 @@ local function UpdateFrames()
 					if IsSpellInRange(5697, unit) == 0 then
                         inRange = false
 					end
-				
+				elseif BlizzFaderDB.WarlockFriendly == 2 and select(2, UnitClass("player")) == "WARLOCK" then
+                    -- Bandage
+					if IsItemInRange(21991, unit) == 0 then
+                        inRange = false
+					end
 				
 				-- [ROGUE]
                elseif BlizzFaderDB.RogueFriendly == 1 and select(2, UnitClass("player")) == "ROGUE" then
@@ -1484,7 +1498,12 @@ local function UpdateFrames()
                     elseif IsSpellInRange(3411, unit) == 0 then
                         inRange = false
 					end
-               elseif BlizzFaderDB.WarriorFriendly == 2 and select(2, UnitClass("player")) == "WARRIOR" then
+				elseif BlizzFaderDB.WarriorFriendly == 2 and select(2, UnitClass("player")) == "WARRIOR" then
+                    -- Battle and Commanding Shout
+					if IsItemInRange(21519, unit) == 0 then
+                        inRange = false
+					end			   			    
+               elseif BlizzFaderDB.WarriorFriendly == 3 and select(2, UnitClass("player")) == "WARRIOR" then
                     -- Bandage
 					if IsItemInRange(21991, unit) == 0 then
                         inRange = false
