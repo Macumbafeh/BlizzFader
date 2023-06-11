@@ -893,34 +893,34 @@ local function UpdateFrames()
                 if BlizzFaderDB.DruidEnemy == 1 and select(2, UnitClass("player")) == "DRUID" then 
                     -- Soothe Animal
                     -- Check if within melee range for Growl
-                    if IsSpellInRange(6795, unit) == 1 then
+                    if IsSpellInRange(GetSpellInfo(6795), unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Soothe Animal
-                    elseif IsSpellInRange(2908, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(2908), unit) == 0 then
                         inRange = false
                     end
                elseif BlizzFaderDB.DruidEnemy == 2 and select(2, UnitClass("player")) == "DRUID" then 
                     -- Wrath
 					-- Check if within melee range for Growl
-                    if IsSpellInRange(6795, unit) == 1 then
+                    if IsSpellInRange(GetSpellInfo(6795), unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Wrath
-                    elseif IsSpellInRange(5176, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(5176), unit) == 0 then
                         inRange = false
                     end
                 elseif BlizzFaderDB.DruidEnemy == 3 and select(2, UnitClass("player")) == "DRUID" then 
                     -- Cyclone
                     -- Check if within melee range for Growl
-                    if IsSpellInRange(6795, unit) == 1 then
+                    if IsSpellInRange(GetSpellInfo(6795), unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Cyclone
-                    elseif IsSpellInRange(33786, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(33786), unit) == 0 then
                         inRange = false
                     end
 				elseif BlizzFaderDB.DruidEnemy == 4 and select(2, UnitClass("player")) == "DRUID" then 
                     -- Feral Charge
                     -- Check if within melee range for Growl
-                    if IsSpellInRange(6795, unit) == 1 then
+                    if IsSpellInRange(GetSpellInfo(6795), unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Netherweave Net item
                     elseif IsItemInRange(24268, unit) == 0 then
@@ -930,10 +930,10 @@ local function UpdateFrames()
 				elseif BlizzFaderDB.DruidEnemy == 5 and select(2, UnitClass("player")) == "DRUID" then 
                     -- Bash (Growl)
                     -- Check if within melee range for Growl
-                    if IsSpellInRange(6795, unit) == 1 then
+                    if IsSpellInRange(GetSpellInfo(6795), unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Bash (Growl)
-                    elseif IsSpellInRange(6795, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(6795), unit) == 0 then
                         inRange = false
                     end
 
@@ -941,37 +941,37 @@ local function UpdateFrames()
                 elseif BlizzFaderDB.ShamanEnemy == 1 and select(2, UnitClass("player")) == "SHAMAN" then 
                     -- Lightning Bolt
 					-- Check if within melee range for Voodoo Charm item or Stormstrike
-					if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(32176, unit) == nil) or (IsSpellInRange(32176, unit) == 1)  then
+					if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(GetSpellInfo(32176), unit) == nil) or (IsSpellInRange(GetSpellInfo(32176), unit) == 1)  then
                         inMeleeRange = true
                     -- Check if out of range for Lightning Bolt
-                    elseif IsSpellInRange(403, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(403), unit) == 0 then
                         inRange = false
                     end
                 elseif BlizzFaderDB.ShamanEnemy == 2 and select(2, UnitClass("player")) == "SHAMAN" then 
                     -- Purge
                     -- Check if within melee range for Voodoo Charm item or Stormstrike
-                    if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(32176, unit) == nil) or (IsSpellInRange(32176, unit) == 1)  then 
+                    if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(GetSpellInfo(32176), unit) == nil) or (IsSpellInRange(GetSpellInfo(32176), unit) == 1)  then
                         inMeleeRange = true
                     -- Check if out of range for Purge
-                    elseif IsSpellInRange(370, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(370), unit) == 0 then
                         inRange = false
                     end
                 elseif BlizzFaderDB.ShamanEnemy == 3 and select(2, UnitClass("player")) == "SHAMAN" then 
                     -- Earth Shock
                     -- Check if within melee range for Voodoo Charm item or Stormstrike
-                    if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(32176, unit) == nil) or (IsSpellInRange(32176, unit) == 1)  then
-                        inMeleeRange = true
+                    if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(GetSpellInfo(32176), unit) == nil) or (IsSpellInRange(GetSpellInfo(32176), unit) == 1)  then
+                       inMeleeRange = true
                     -- Check if out of range for Earth Shock
-                    elseif IsSpellInRange(8042, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(8042), unit) == 0 then
                         inRange = false
                     end
 				elseif BlizzFaderDB.ShamanEnemy == 4 and select(2, UnitClass("player")) == "SHAMAN" then 
                     -- Stormstrike
                     -- Check if within melee range for Voodoo Charm item or Stormstrike
-                    if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(32176, unit) == nil) or (IsSpellInRange(32176, unit) == 1)  then
-                        inMeleeRange = true
+                    if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(GetSpellInfo(32176), unit) == nil) or (IsSpellInRange(GetSpellInfo(32176), unit) == 1)  then
+                       inMeleeRange = true
                     -- Check if out of range for Stormstrike
-                    elseif IsSpellInRange(32176, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(32176), unit) == 0 then
                         inRange = false
                     end
 					
@@ -983,7 +983,7 @@ local function UpdateFrames()
                     if IsItemInRange(8149, unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Fireball
-                    elseif IsSpellInRange(133, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(133), unit) == 0 then
                         inRange = false
                     end
                 elseif BlizzFaderDB.MageEnemy == 2 and select(2, UnitClass("player")) == "MAGE" then 
@@ -992,7 +992,7 @@ local function UpdateFrames()
                     if IsItemInRange(8149, unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Frost bolt
-                    elseif IsSpellInRange(116, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(116), unit) == 0 then
                         inRange = false
                     end
                 elseif BlizzFaderDB.MageEnemy == 3 and select(2, UnitClass("player")) == "MAGE" then 
@@ -1001,7 +1001,7 @@ local function UpdateFrames()
                     if IsItemInRange(8149, unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Scorch
-                    elseif IsSpellInRange(2948, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(2948), unit) == 0 then
                         inRange = false
                     end
                 elseif BlizzFaderDB.MageEnemy == 4 and select(2, UnitClass("player")) == "MAGE" then 
@@ -1010,7 +1010,7 @@ local function UpdateFrames()
                     if IsItemInRange(8149, unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Shoot
-                    elseif IsSpellInRange(5019, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(5019), unit) == 0 then
                         inRange = false
                     end
                 elseif BlizzFaderDB.MageEnemy == 5 and select(2, UnitClass("player")) == "MAGE" then 
@@ -1019,7 +1019,7 @@ local function UpdateFrames()
                     if IsItemInRange(8149, unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Fire Blast
-                    elseif IsSpellInRange(2136, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(2136), unit) == 0 then
                         inRange = false
                     end
 				
@@ -1030,7 +1030,7 @@ local function UpdateFrames()
                     if IsItemInRange(8149, unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Immolate
-                    elseif IsSpellInRange(348, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(348), unit) == 0 then
                         inRange = false
                     end
                 elseif BlizzFaderDB.WarlockEnemy == 2 and select(2, UnitClass("player")) == "WARLOCK" then 
@@ -1039,7 +1039,7 @@ local function UpdateFrames()
                     if IsItemInRange(8149, unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Corruption 
-                    elseif IsSpellInRange(172, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(172), unit) == 0 then
                         inRange = false
                     end
                 elseif BlizzFaderDB.WarlockEnemy == 3 and select(2, UnitClass("player")) == "WARLOCK" then 
@@ -1048,7 +1048,7 @@ local function UpdateFrames()
                     if IsItemInRange(8149, unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Shoot
-                    elseif IsSpellInRange(5019, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(5019), unit) == 0 then
                         inRange = false
                     end
                 elseif BlizzFaderDB.WarlockEnemy == 4 and select(2, UnitClass("player")) == "WARLOCK" then 
@@ -1057,7 +1057,7 @@ local function UpdateFrames()
                     if IsItemInRange(8149, unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Fear
-                    elseif IsSpellInRange(5782, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(5782), unit) == 0 then
                         inRange = false
                     end
                 elseif BlizzFaderDB.WarlockEnemy == 5 and select(2, UnitClass("player")) == "WARLOCK" then 
@@ -1066,7 +1066,7 @@ local function UpdateFrames()
                     if IsItemInRange(8149, unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Shadowburn
-                    elseif IsSpellInRange(17877, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(17877), unit) == 0 then
                         inRange = false
                     end
 				
@@ -1075,59 +1075,59 @@ local function UpdateFrames()
                 elseif BlizzFaderDB.RogueEnemy == 1 and select(2, UnitClass("player")) == "ROGUE" then 
                     -- Slice and Dice 
                      -- Check if within melee range for Eviscerate
-                    if IsSpellInRange(2098, unit) == 1 then
+                    if IsSpellInRange(GetSpellInfo(2098), unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Slice and Dice
-                    elseif IsSpellInRange(5171, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(5171), unit) == 0 then
                         inRange = false
                     end
                                
 				elseif BlizzFaderDB.RogueEnemy == 2 and select(2, UnitClass("player")) == "ROGUE" then 
                     -- Throw
                     -- Check if within melee range for Eviscerate
-                    if IsSpellInRange(2098, unit) == 1 then
+                    if IsSpellInRange(GetSpellInfo(2098), unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Throw
-                    elseif IsSpellInRange(2764, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(2764), unit) == 0 then
                         inRange = false
 					end
                 
                 elseif BlizzFaderDB.RogueEnemy == 3 and select(2, UnitClass("player")) == "ROGUE" then 
                     -- Shadow Step
                     -- Check if within melee range for Eviscerate
-                    if IsSpellInRange(2098, unit) == 1 then
+                    if IsSpellInRange(GetSpellInfo(2098), unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Shadow Step
-                    elseif IsSpellInRange(36554, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(36554), unit) == 0 then
                         inRange = false
                     end
 				elseif BlizzFaderDB.RogueEnemy == 4 and select(2, UnitClass("player")) == "ROGUE" then 
                     -- Blind
                     -- Check if within melee range for Eviscerate
-                    if IsSpellInRange(2098, unit) == 1 then
+                    if IsSpellInRange(GetSpellInfo(2098), unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Blind
-                    elseif IsSpellInRange(2094, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(2094), unit) == 0 then
                         inRange = false
                     end
                     
                   elseif BlizzFaderDB.RogueEnemy == 5 and select(2, UnitClass("player")) == "ROGUE" then 
                     -- Sap
                     -- Check if within melee range for Eviscerate
-                    if IsSpellInRange(2098, unit) == 1 then
+                    if IsSpellInRange(GetSpellInfo(2098), unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Sap
-                    elseif IsSpellInRange(6770, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(6770), unit) == 0 then
                         inRange = false
                     end
                     
                 elseif BlizzFaderDB.RogueEnemy == 6 and select(2, UnitClass("player")) == "ROGUE" then 
                     -- Eviscerate
                     -- Check if within melee range for Eviscerate
-				if IsSpellInRange(2098, unit) == 1 then
+				if IsSpellInRange(GetSpellInfo(2098), unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range 
-                    elseif IsSpellInRange(2098, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(2098), unit) == 0 then
                         inRange = false
                     end
 					
@@ -1139,7 +1139,7 @@ local function UpdateFrames()
                     if IsItemInRange(8149, unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Smite
-                    elseif IsSpellInRange(585, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(585), unit) == 0 then
                         inRange = false
                     end
                 elseif BlizzFaderDB.PriestEnemy == 2 and select(2, UnitClass("player")) == "PRIEST" then 
@@ -1148,7 +1148,7 @@ local function UpdateFrames()
                     if IsItemInRange(8149, unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Shadow Word: Pain
-                    elseif IsSpellInRange(589, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(589), unit) == 0 then
                         inRange = false
                     end
                 elseif BlizzFaderDB.PriestEnemy == 3 and select(2, UnitClass("player")) == "PRIEST" then 
@@ -1157,7 +1157,7 @@ local function UpdateFrames()
                     if IsItemInRange(8149, unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Shoot
-                    elseif IsSpellInRange(5019, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(5019), unit) == 0 then
                         inRange = false
                     end
                 elseif BlizzFaderDB.PriestEnemy == 4 and select(2, UnitClass("player")) == "PRIEST" then 
@@ -1166,7 +1166,7 @@ local function UpdateFrames()
                     if IsItemInRange(8149, unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Mind Flay
-                    elseif IsSpellInRange(15407, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(15407), unit) == 0 then
                         inRange = false
                     end
                     elseif BlizzFaderDB.PriestEnemy == 5 and select(2, UnitClass("player")) == "PRIEST" then 
@@ -1175,7 +1175,7 @@ local function UpdateFrames()
                     if IsItemInRange(8149, unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Mind Control
-                    elseif IsSpellInRange(605, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(605), unit) == 0 then
                         inRange = false
                     end
 					
@@ -1184,55 +1184,55 @@ local function UpdateFrames()
                 elseif BlizzFaderDB.HunterEnemy == 1 and select(2, UnitClass("player")) == "HUNTER" then 
                     -- Hunter's Mark
                     -- Check if within melee range for Wing clip
-                    if IsSpellInRange(2974, unit) == 1 then
+                    if IsSpellInRange(GetSpellInfo(2974), unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Hunter's Mark
-                    elseif IsSpellInRange(1130, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(1130), unit) == 0 then
                         inRange = false
                     end
                 elseif BlizzFaderDB.HunterEnemy == 2 and select(2, UnitClass("player")) == "HUNTER" then 
                     -- Kill Command
                     -- Check if within melee range for Wing clip
-                    if IsSpellInRange(2974, unit) == 1 then
+                    if IsSpellInRange(GetSpellInfo(2974), unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Kill Command
-                    elseif IsSpellInRange(34026, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(34026), unit) == 0 then
                         inRange = false
                     end
                 elseif BlizzFaderDB.HunterEnemy == 3 and select(2, UnitClass("player")) == "HUNTER" then 
                     -- Auto Shot
                     -- Check if within melee range for Wing clip
-                    if IsSpellInRange(2974, unit) == 1 then
+                    if IsSpellInRange(GetSpellInfo(2974), unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Auto Shot
-                    elseif IsSpellInRange(75, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(75), unit) == 0 then
                         inRange = false
                     end
                elseif BlizzFaderDB.HunterEnemy == 4 and select(2, UnitClass("player")) == "HUNTER" then 
                     -- Throw
                     -- Check if within melee range for Wing clip
-                    if IsSpellInRange(2974, unit) == 1 then
+                    if IsSpellInRange(GetSpellInfo(2974), unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Throw
-                    elseif IsSpellInRange(2764, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(2764), unit) == 0 then
                         inRange = false
                     end                    
                 elseif BlizzFaderDB.HunterEnemy == 5 and select(2, UnitClass("player")) == "HUNTER" then 
                     -- Scatter Shot
                     -- Check if within melee range for Wing clip
-                    if IsSpellInRange(2974, unit) == 1 then
+                    if IsSpellInRange(GetSpellInfo(2974), unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Scatter Shot
-                    elseif IsSpellInRange(19503, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(19503), unit) == 0 then
                         inRange = false
                     end                    
                  elseif BlizzFaderDB.HunterEnemy == 6 and select(2, UnitClass("player")) == "HUNTER" then 
                     -- Wing clip
                     -- Check if within melee range for Wing clip
-                    if IsSpellInRange(2974, unit) == 1 then
+                    if IsSpellInRange(GetSpellInfo(2974), unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Scatter Shot
-                    elseif IsSpellInRange(2974, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(2974), unit) == 0 then
                         inRange = false
                     end
 				
@@ -1241,55 +1241,55 @@ local function UpdateFrames()
                 elseif BlizzFaderDB.PaladinEnemy == 1 and select(2, UnitClass("player")) == "PALADIN" then 
                     -- Hammer of Wrath
                     -- Check if within melee range for Voodoo Charm item or Crusader Strike
-					if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(35395, unit) == nil) or (IsSpellInRange(35395, unit) == 1)  then
+					if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(GetSpellInfo(35395), unit) == nil) or (IsSpellInRange(GetSpellInfo(35395), unit) == 1)  then
 						inMeleeRange = true
                     -- Check if out of range for Hammer of Wrath
-                    elseif IsSpellInRange(24275, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(24275), unit) == 0 then
                         inRange = false
                     end
                 elseif BlizzFaderDB.PaladinEnemy == 2 and select(2, UnitClass("player")) == "PALADIN" then 
                     -- Turn Undead
                     -- Check if within melee range for Voodoo Charm item or Crusader Strike
-					if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(35395, unit) == nil) or (IsSpellInRange(35395, unit) == 1)  then
+					if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(GetSpellInfo(35395), unit) == nil) or (IsSpellInRange(GetSpellInfo(35395), unit) == 1)  then
 						inMeleeRange = true
                     -- Check if out of range for Turn Undead
-                    elseif IsSpellInRange(2878, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(2878), unit) == 0 then
                         inRange = false
                     end
                 elseif BlizzFaderDB.PaladinEnemy == 3 and select(2, UnitClass("player")) == "PALADIN" then 
                     -- Holy Shock
                      -- Check if within melee range for Voodoo Charm item or Crusader Strike
-					if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(35395, unit) == nil) or (IsSpellInRange(35395, unit) == 1)  then
+					if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(GetSpellInfo(35395), unit) == nil) or (IsSpellInRange(GetSpellInfo(35395), unit) == 1)  then
 						inMeleeRange = true
                     -- Check if out of range for Holy Shock
-                    elseif IsSpellInRange(20473, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(20473), unit) == 0 then
                         inRange = false
                     end
 				elseif BlizzFaderDB.PaladinEnemy == 4 and select(2, UnitClass("player")) == "PALADIN" then 
                     -- Repentance
                      -- Check if within melee range for Voodoo Charm item or Crusader Strike
-					if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(35395, unit) == nil) or (IsSpellInRange(35395, unit) == 1)  then
+					if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(GetSpellInfo(35395), unit) == nil) or (IsSpellInRange(GetSpellInfo(35395), unit) == 1)  then
 						inMeleeRange = true
                     -- Check if out of range for Repentance
-                    elseif IsSpellInRange(20066, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(20066), unit) == 0 then
                         inRange = false
                     end
                 elseif BlizzFaderDB.PaladinEnemy == 5 and select(2, UnitClass("player")) == "PALADIN" then 
                     -- Judgement
                      -- Check if within melee range for Voodoo Charm item or Crusader Strike
-					if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(35395, unit) == nil) or (IsSpellInRange(35395, unit) == 1)  then
+					if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(GetSpellInfo(35395), unit) == nil) or (IsSpellInRange(GetSpellInfo(35395), unit) == 1)  then
 						inMeleeRange = true
                     -- Check if out of range for Judgement
-                    elseif IsSpellInRange(20271, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(20271), unit) == 0 then
                         inRange = false
                     end
                elseif BlizzFaderDB.PaladinEnemy == 6 and select(2, UnitClass("player")) == "PALADIN" then 
                     -- Crusader Strike
                     -- Check if within melee range for Crusader Strike
-                   if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(35395, unit) == nil) or (IsSpellInRange(35395, unit) == 1)  then
+                   if (IsItemInRange(8149, unit) == 1 and IsSpellInRange(GetSpellInfo(35395), unit) == nil) or (IsSpellInRange(GetSpellInfo(35395), unit) == 1)  then
 						inMeleeRange = true
                     -- Check if out of range for Crusader Strike
-                    elseif IsSpellInRange(35395, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(35395), unit) == 0 then
                         inRange = false
                     end
 				
@@ -1298,16 +1298,16 @@ local function UpdateFrames()
                 elseif BlizzFaderDB.WarriorEnemy == 1 and select(2, UnitClass("player")) == "WARRIOR" then 
                     -- Shoot
                     -- Check if within melee range for Rend
-                    if IsSpellInRange(772, unit) == 1 then
+                    if IsSpellInRange(GetSpellInfo(772), unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Shoot
-                    elseif IsSpellInRange(3018, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(3018), unit) == 0 then
                         inRange = false
                     end
                 elseif BlizzFaderDB.WarriorEnemy == 2 and select(2, UnitClass("player")) == "WARRIOR" then 
                     -- Charge
                    -- Check if within melee range for Rend
-                    if IsSpellInRange(772, unit) == 1 then
+                    if IsSpellInRange(GetSpellInfo(772), unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Netherweave Net item
                     elseif IsItemInRange(24268, unit) == 0 then
@@ -1316,25 +1316,25 @@ local function UpdateFrames()
                 elseif BlizzFaderDB.WarriorEnemy == 3 and select(2, UnitClass("player")) == "WARRIOR" then 
                     -- Intimidating Shout
                     -- Check if within melee range for Rend
-                    if IsSpellInRange(772, unit) == 1 then
+                    if IsSpellInRange(GetSpellInfo(772), unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Intimidating Shout
-                    elseif IsSpellInRange(5246, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(5246), unit) == 0 then
                         inRange = false
                     end
                 elseif BlizzFaderDB.WarriorEnemy == 4 and select(2, UnitClass("player")) == "WARRIOR" then 
                     -- Rend
 					-- Check if within melee range for Rend
-                    if IsSpellInRange(772, unit) == 1 then
+                    if IsSpellInRange(GetSpellInfo(772), unit) == 1 then
                         inMeleeRange = true
                     -- Check if out of range for Heroic Strike
-                    elseif IsSpellInRange(772, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(772), unit) == 0 then
                         inRange = false
                     end	
 			    end
 				
 				-- Check if within deadzone range (5-8m)
-				if IsItemInRange(34368, unit) == 1 then
+				if IsItemInRange(34368, unit) then
 						inDeadzone = true
                     end
                 -- Fade out the frame if the player is out of range
@@ -1370,17 +1370,17 @@ local function UpdateFrames()
                 -- [DRUID]
                  if BlizzFaderDB.DruidFriendly == 1 and select(2, UnitClass("player")) == "DRUID" then 
                     -- Healing touch
-					if IsSpellInRange(5185, unit) == 0 then
+					if IsSpellInRange(GetSpellInfo(5185), unit) == 0 then
                         inRange = false
 					end
 				elseif BlizzFaderDB.DruidFriendly == 2 and select(2, UnitClass("player")) == "DRUID" then
                     -- Thorns
-                    if IsSpellInRange(467, unit) == 0 then
+                    if IsSpellInRange(GetSpellInfo(467), unit) == 0 then
                         inRange = false
 					end
                 elseif BlizzFaderDB.DruidFriendly == 3 and select(2, UnitClass("player")) == "DRUID" then
                     -- Mark of the Wild
-					if IsSpellInRange(1126, unit) == 0 then
+					if IsSpellInRange(GetSpellInfo(1126), unit) == 0 then
                         inRange = false
 					end
 
@@ -1388,12 +1388,12 @@ local function UpdateFrames()
                 -- [SHAMAN]
                elseif BlizzFaderDB.ShamanFriendly == 1 and select(2, UnitClass("player")) == "SHAMAN" then
                     -- Healing Wave
-                    if IsSpellInRange(331, unit) == 0 then
+                    if IsSpellInRange(GetSpellInfo(331), unit) == 0 then
                         inRange = false
 					end
                elseif BlizzFaderDB.ShamanFriendly == 2 and select(2, UnitClass("player")) == "SHAMAN" then
                     -- Ancestral Spirit
-					if IsSpellInRange(2008, unit) == 0 then
+					if IsSpellInRange(GetSpellInfo(2008), unit) == 0 then
                         inRange = false
 					end
 					
@@ -1401,12 +1401,12 @@ local function UpdateFrames()
 				-- [MAGE]
                elseif BlizzFaderDB.MageFriendly == 1 and select(2, UnitClass("player")) == "MAGE" then
                     -- Arcane Brilliance
-                    if IsSpellInRange(23028, unit) == 0 then
+                    if IsSpellInRange(GetSpellInfo(23028), unit) == 0 then
                         inRange = false
 					end
                elseif BlizzFaderDB.MageFriendly == 2 and select(2, UnitClass("player")) == "MAGE" then
                     -- Arcane Intellect
-                    if IsSpellInRange(1459, unit) == 0 then
+                    if IsSpellInRange(GetSpellInfo(1459), unit) == 0 then
                         inRange = false
 					end
 				elseif BlizzFaderDB.MageFriendly == 3 and select(2, UnitClass("player")) == "MAGE" then
@@ -1418,7 +1418,7 @@ local function UpdateFrames()
 				-- [WARLOCK]
                elseif BlizzFaderDB.WarlockFriendly == 1 and select(2, UnitClass("player")) == "WARLOCK" then
                     -- Unending Breath
-					if IsSpellInRange(5697, unit) == 0 then
+					if IsSpellInRange(GetSpellInfo(5697), unit) == 0 then
                         inRange = false
 					end
 				elseif BlizzFaderDB.WarlockFriendly == 2 and select(2, UnitClass("player")) == "WARLOCK" then
@@ -1438,12 +1438,12 @@ local function UpdateFrames()
 				-- [PRIEST]
                elseif BlizzFaderDB.PriestFriendly == 1 and select(2, UnitClass("player")) == "PRIEST" then
                     -- Lesser Heal
-                    if IsSpellInRange(2050, unit) == 0 then
+                    if IsSpellInRange(GetSpellInfo(2050), unit) == 0 then
                         inRange = false
 					           end
                 elseif BlizzFaderDB.PriestFriendly == 2 and select(2, UnitClass("player")) == "PRIEST" then
                     -- Power Word: Fortitude
-                    if IsSpellInRange(1243, unit) == 0 then
+                    if IsSpellInRange(GetSpellInfo(1243), unit) == 0 then
                         inRange = false
 					end	
 						
@@ -1451,12 +1451,12 @@ local function UpdateFrames()
 				-- [HUNTER]
                elseif BlizzFaderDB.HunterFriendly == 1 and select(2, UnitClass("player")) == "HUNTER" then
                     -- Misdirection 
-                    if IsSpellInRange(34477, unit) == 0 then
+                    if IsSpellInRange(GetSpellInfo(34477), unit) == 0 then
                         inRange = false
 					 end
                elseif BlizzFaderDB.HunterFriendly == 2 and select(2, UnitClass("player")) == "HUNTER" then
                     -- Mend pet
-                    if IsSpellInRange(136, unit) == 0 then
+                    if IsSpellInRange(GetSpellInfo(136), unit) == 0 then
                         inRange = false
 					end
                elseif BlizzFaderDB.HunterFriendly == 3 and select(2, UnitClass("player")) == "HUNTER" then
@@ -1466,7 +1466,7 @@ local function UpdateFrames()
 					end
                elseif BlizzFaderDB.HunterFriendly == 4 and select(2, UnitClass("player")) == "HUNTER" then
                     -- Dismiss pet
-                    if IsSpellInRange(2641, unit) == 0 then
+                    if IsSpellInRange(GetSpellInfo(2641), unit) == 0 then
                         inRange = false
 					end
 				
@@ -1474,17 +1474,17 @@ local function UpdateFrames()
 				-- [PALADIN]
                elseif BlizzFaderDB.PaladinFriendly == 1 and select(2, UnitClass("player")) == "PALADIN" then
                     -- Holy Light 
-                    if IsSpellInRange(635, unit) == 0 then
+                    if IsSpellInRange(GetSpellInfo(635), unit) == 0 then
                         inRange = false
 					end
                elseif BlizzFaderDB.PaladinFriendly == 2 and select(2, UnitClass("player")) == "PALADIN" then
                     -- Blessing of Might
-                    if IsSpellInRange(19740, unit) == 0 then
+                    if IsSpellInRange(GetSpellInfo(19740), unit) == 0 then
                         inRange = false
 					end
                elseif BlizzFaderDB.PaladinFriendly == 3 and select(2, UnitClass("player")) == "PALADIN" then
                     -- Holy Shock 
-                    if IsSpellInRange(20473, unit) == 0 then
+                    if IsSpellInRange(GetSpellInfo(20473), unit) == 0 then
                         inRange = false
 					end
 				
@@ -1495,7 +1495,7 @@ local function UpdateFrames()
 					-- Check if within melee range for Attuned Crystal Cores item
                     if IsItemInRange(34368, unit) == 1 then
                         inRange = true
-                    elseif IsSpellInRange(3411, unit) == 0 then
+                    elseif IsSpellInRange(GetSpellInfo(3411), unit) == 0 then
                         inRange = false
 					end
 				elseif BlizzFaderDB.WarriorFriendly == 2 and select(2, UnitClass("player")) == "WARRIOR" then
