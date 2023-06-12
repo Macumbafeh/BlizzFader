@@ -32,6 +32,18 @@ local defaultBlizzFaderDB = {
 -- Saved variables
 BlizzFaderDB = BlizzFaderDB or {}
 
+local function HighlightDebug()
+local queryitem = {8149, 24268, 34368, 21991, 21519};
+if (queryitem) and (queryitem ~= nil) and (queryitem ~= "") and (queryitem ~= 0) then
+    for i, itemID in ipairs(queryitem) do
+        local itemName = GetItemInfo(itemID)
+        -- print(itemName)
+        GameTooltip:SetHyperlink("item:"..itemID..":0:0:0:0:0:0:0");
+    end
+end
+    print("Highlights debug done.")
+end
+
 -- Interface options
 local options = {
     type = "group",
@@ -68,6 +80,25 @@ local options = {
         },
 	},
 },
+
+			debugoptions = {
+				name = "",
+				type = "group",
+				order = 0,
+				inline = true,
+				width = "full",
+				args = {
+					debugButton = {
+						type = "execute",
+						name = "Highlight Debug",
+						desc = "Click to query items and make Melee range and Deadzone range highlights works.",
+						func = function()
+							HighlightDebug()
+						end,
+					},
+				},
+			},
+
 	ColorEnemy = {
          type = "group",
          name = "Enemy target Range option",
@@ -192,7 +223,7 @@ yellowBorderColor = {
     end,
     values = {
     -- Soothe Animal
-	"|TInterface\\Icons\\Ability_Hunter_BeastSoothe:15:15|t 40m (lvl 22, 44m, 48m Nature's Reach)", 
+	"|TInterface\\Icons\\Ability_Hunter_BeastSoothe:15:15|t 40m (lvl 22, 44m, 48m Nature's Reach, Beast only)", 
 	-- Wrath
 	"|TInterface\\Icons\\Spell_Nature_AbolishMagic:15:15|t 30m (33m, 36m Nature's Reach)", 
 	-- Cyclone
@@ -340,7 +371,7 @@ yellowBorderColor = {
     -- Shadow Step
     "|TInterface\\Icons\\Ability_Rogue_Shadowstep:15:15|t 25m (lvl 50)",
     -- Blind
-	  "|TInterface\\Icons\\Spell_Shadow_MindSteal:15:15|t 10m (lvl 34, 12m, 15m Dirty Tricks)", 
+	  "|TInterface\\Icons\\Spell_Shadow_MindSteal:15:15|t 10m (lvl 34, 12m, 15m Dirty Tricks, Humanoid only)", 
 	  -- Sap
 	 "|TInterface\\Icons\\Ability_Sap:15:15|t 5m (lvl 10, 7m, 10m Dirty Tricks)",
 	  -- Eviscerate
@@ -380,7 +411,7 @@ yellowBorderColor = {
 	 -- Mind Flay
 	 "|TInterface\\Icons\\Spell_Shadow_SiphonMana:15:15|t 20m (lvl 20, 22m, 24m Grim Reach)",
 	 -- Mind Control
-	 "|TInterface\\Icons\\Spell_Shadow_ShadowWordDominate:15:15|t 20m (lvl 30)",
+	 "|TInterface\\Icons\\Spell_Shadow_ShadowWordDominate:15:15|t 20m (lvl 30, Humanoid only)",
     },
     order = 1,
 	width = "full",
@@ -578,7 +609,7 @@ yellowBorderColor = {
     -- Healing Wave   
     "|TInterface\\Icons\\Spell_Nature_HealingWaveGreater:15:15|t 40m", 
     -- Ancestral Spirit
-	"|TInterface\\Icons\\Spell_Nature_Regenerate:15:15|t 30m (lvl 12)",
+	"|TInterface\\Icons\\Spell_Nature_Regenerate:15:15|t 30m (lvl 12, Dead Player only)",
     },
     order = 1,
     width = "full",
@@ -727,11 +758,11 @@ yellowBorderColor = {
     -- Misdirection
     "|TInterface\\Icons\\Ability_Hunter_Misdirection:15:15|t 100m (lvl 70 only)",
     -- Mend pet
-    "|TInterface\\Icons\\Ability_Hunter_MendPet:15:15|t 45m (lvl 12)",
+    "|TInterface\\Icons\\Ability_Hunter_MendPet:15:15|t 45m (lvl 12, Pet only)",
      -- Bandage
     "|TInterface\\Icons\\INV_Misc_Bandage_Netherweave_Heavy:15:15|t 15m",
     -- Dismiss pet
-    "|TInterface\\Icons\\Spell_Nature_SpiritWolf:15:15|t 10m (lvl 10)",
+    "|TInterface\\Icons\\Spell_Nature_SpiritWolf:15:15|t 10m (lvl 10, Pet only)",
     },
     order = 1,
 	width = "full",
@@ -808,14 +839,30 @@ yellowBorderColor = {
     },
 	
 	SaveAndReload = {
-		type = "execute",
-		name = "Save & Reload",
-		desc = "Save the settings and reload the UI, if you have some issue click on this button to reload the game",
-		func = function()
-			ReloadUI()
-			end,
-		order = 10,
-       },
+    type = "execute",
+    name = "Save & Reload",
+    desc = "Save the settings and reload the UI, if you have some issue click on this button to reload the game",
+    func = function()
+        StaticPopupDialogs["CONFIRM_RELOADUI"] = {
+            text = "Are you sure you want to reload the UI?",
+            button1 = "Yes",
+            button2 = "No",
+            OnAccept = function()
+                ReloadUI()
+            end,
+            OnCancel = function()
+                -- Do nothing if the user cancels
+            end,
+            timeout = 0,
+            whileDead = true,
+            hideOnEscape = true,
+            preferredIndex = 3, -- Ensure the dialog appears above other UI elements
+        }
+
+        StaticPopup_Show("CONFIRM_RELOADUI")
+    end,
+    order = 10,
+		}
 	  },
     },
   },
@@ -1334,7 +1381,7 @@ local function UpdateFrames()
 			    end
 				
 				-- Check if within deadzone range (5-8m)
-				if IsItemInRange(34368, unit) then
+				if IsItemInRange(34368, unit) == 1 then
 						inDeadzone = true
                     end
                 -- Fade out the frame if the player is out of range
@@ -1541,6 +1588,15 @@ local function OnEvent(self, event, ...)
         if not BlizzFaderDB.opacity then
             BlizzFaderDB = defaultBlizzFaderDB 
         end
+		local queryitem = {8149, 24268, 34368, 21991, 21519};
+	if (queryitem) and (queryitem ~= nil) and (queryitem ~= "") and (queryitem ~= 0) then
+    for i, itemID in ipairs(queryitem) do
+        local itemName = GetItemInfo(itemID)
+        -- print(itemName)
+        GameTooltip:SetHyperlink("item:"..itemID..":0:0:0:0:0:0:0");
+    end
+	
+end
     end
 
     if event == "PLAYER_ENTERING_WORLD" or event == "PARTY_MEMBERS_CHANGED" then
