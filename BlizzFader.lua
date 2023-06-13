@@ -33,7 +33,7 @@ local defaultBlizzFaderDB = {
 BlizzFaderDB = BlizzFaderDB or {}
 
 local function HighlightDebug()
-local queryitem = {8149, 24268, 34368, 21991, 21519};
+local queryitem = {8149, 24268, 34368, 21991, 21519, 32321};
 if (queryitem) and (queryitem ~= nil) and (queryitem ~= "") and (queryitem ~= 0) then
     for i, itemID in ipairs(queryitem) do
         local itemName = GetItemInfo(itemID)
@@ -42,6 +42,14 @@ if (queryitem) and (queryitem ~= nil) and (queryitem ~= "") and (queryitem ~= 0)
     end
 end
     print("Highlights debug done.")
+end
+
+local function resetred()
+    BlizzFaderDB.redBorderColor = { r = 1, g = 0, b = 0, a = 1 } -- Default red color
+end
+
+local function resetyellow()
+    BlizzFaderDB.yellowBorderColor = { r = 1, g = 1, b = 0, a = 1 } -- Default yellow color
 end
 
 -- Interface options
@@ -142,11 +150,19 @@ redBorderColor = {
     end,
 },
 
+resetButton1 = {
+        type = "execute",
+        name = "Reset Melee Color",
+        desc = "Reset the color option to default for the Melee Border Color",
+        order = 2,
+        func = resetred,
+    },
+
 enableDeadzoneHighlight = {
     type = "toggle",
     name = "Enable Deadzone Border",
     desc = "Toggle the yellow border around the frame when in deadzone range",
-    order = 2,
+    order = 3,
     width = "full",
     get = function()
 			if BlizzFaderDB.enableDeadzoneHighlight == nil then
@@ -163,7 +179,7 @@ yellowBorderColor = {
     type = "color",
     name = "Deadzone Border Color",
     desc = "Set the color of the Deadzone border",
-    order = 3,
+    order = 4,
     get = function()
         local color = BlizzFaderDB.yellowBorderColor or { r = 1, g = 1, b = 0, a = 1 } -- Default red color
         return color.r, color.g, color.b, color.a
@@ -176,6 +192,14 @@ yellowBorderColor = {
         return not BlizzFaderDB.enableDeadzoneHighlight
     end,
 },
+
+resetButton2 = {
+        type = "execute",
+        name = "Reset Deadzone Color",
+        desc = "Reset the color option to default for the Deadzone Border Color",
+        order = 5,
+        func = resetyellow,
+    },
 },
 },		 
 	RangeEnemy = {
@@ -1381,7 +1405,7 @@ local function UpdateFrames()
 			    end
 				
 				-- Check if within deadzone range (5-8m)
-				if IsItemInRange(34368, unit) == 1 then
+				if IsItemInRange(32321, unit) == 1 then
 						inDeadzone = true
                     end
                 -- Fade out the frame if the player is out of range
@@ -1588,7 +1612,7 @@ local function OnEvent(self, event, ...)
         if not BlizzFaderDB.opacity then
             BlizzFaderDB = defaultBlizzFaderDB 
         end
-		local queryitem = {8149, 24268, 34368, 21991, 21519};
+		local queryitem = {8149, 24268, 34368, 21991, 21519, 32321};
 	if (queryitem) and (queryitem ~= nil) and (queryitem ~= "") and (queryitem ~= 0) then
     for i, itemID in ipairs(queryitem) do
         local itemName = GetItemInfo(itemID)
