@@ -6,6 +6,7 @@ local defaultBlizzFaderDB = {
     opacity = 0.5,
 	enableRedBorder = true,
 	enableDeadzoneHighlight = true,
+	enableSquare = false,
 	DisableEnemySpells = false,
 	DruidEnemy = 2,
 	ShamanEnemy = 1,
@@ -200,6 +201,23 @@ resetButton2 = {
         order = 5,
         func = resetyellow,
     },
+	
+enableSquare = {
+    type = "toggle",
+    name = "Enable Square",
+    desc = "Toggle Square to replace the yellow/red border around the frame",
+    order = 6,
+    width = "full",
+    get = function()
+			if BlizzFaderDB.enableSquare == nil then
+			BlizzFaderDB.enableSquare = defaultBlizzFaderDB.enableSquare -- Set the default index
+		end
+			return BlizzFaderDB.enableSquare
+          end,
+    set = function(_, value)
+			BlizzFaderDB.enableSquare = value
+          end,
+},
 },
 },		 
 	RangeEnemy = {
@@ -945,8 +963,27 @@ local function GetFrames()
     frameCount = #frameList
 end
 
+local framesquare = {}	
+				for i = 1, 5 do 
+						framesquare[i] = CreateFrame("Frame", nil, TargetFrame)
+						framesquare[i]:SetWidth(32)
+						framesquare[i]:SetHeight(32)
 
+						framesquare[i].bg = framesquare[i]:CreateTexture(nil, "ARTWORK")
+						framesquare[i].border = framesquare[i]:CreateTexture(nil, "BORDER")
 
+						framesquare[i].bg:SetAllPoints()
+						framesquare[i].bg:SetTexture(1)
+
+						framesquare[i].border:SetPoint("CENTER")
+						framesquare[i].border:SetTexture(0, 0, 0, 1)
+						framesquare[i].border:SetWidth(36)
+						framesquare[i].border:SetHeight(36)
+						framesquare[i]:SetPoint("LEFT", TargetFrame, "RIGHT")
+						framesquare[i]:Hide()
+						-- print("hide")
+						end	
+						
 -- Update frames
 local function UpdateFrames()
     for i = 1, frameCount do
@@ -1408,10 +1445,14 @@ local function UpdateFrames()
 				if IsItemInRange(32321, unit) == 1 then
 						inDeadzone = true
                     end
+				
                 -- Fade out the frame if the player is out of range
                 if not inRange and not BlizzFaderDB.DisableEnemySpells then
                     frame:SetAlpha(BlizzFaderDB.opacity)
 					TargetFrameFlash:Hide();
+					-- print("hide range")
+						framesquare[i]:Hide()
+						
                 else
                     -- Fade in the frame if the player is in range
                     if frame:GetAlpha() < 0.91 then
@@ -1419,21 +1460,55 @@ local function UpdateFrames()
                     end
 				
 				-- Add a red border if in melee range
-				if inMeleeRange and BlizzFaderDB.enableRedBorder then
+				if (inMeleeRange and BlizzFaderDB.enableRedBorder)  then
+
 					local color = BlizzFaderDB.redBorderColor or { r = 1, g = 0, b = 0, a = 1 } -- Default red color
+					
 					TargetFrameFlash:SetVertexColor(color.r, color.g, color.b, color.a)
 					TargetFrameFlash:Show();
+				
+					
 				elseif inDeadzone and BlizzFaderDB.enableDeadzoneHighlight and not inMeleeRange then
-					local color = BlizzFaderDB.yellowBorderColor or { r = 1, g = 1, b = 0, a = 1 } -- Default red color
+
+				local color = BlizzFaderDB.yellowBorderColor or { r = 1, g = 1, b = 0, a = 1 } -- Default yellow color
+					
+					
 					TargetFrameFlash:SetVertexColor(color.r, color.g, color.b, color.a)
-					
-					
 					TargetFrameFlash:Show()
+				
+					
+
+						
+				
 				else
+					
+							
 					TargetFrameFlash:Hide();
 				end
-                end
-            end
+				
+				if (inMeleeRange and BlizzFaderDB.enableSquare)  then	
+					local color = BlizzFaderDB.redBorderColor or { r = 1, g = 0, b = 0, a = 1 } -- Default red color
+							framesquare[i].bg:SetTexture(color.r, color.g, color.b, color.a)
+							framesquare[i]:Show()
+						-- print("show melee")
+				elseif inDeadzone and BlizzFaderDB.enableSquare and not inMeleeRange then
+
+						local color = BlizzFaderDB.yellowBorderColor or { r = 1, g = 1, b = 0, a = 1 } -- Default yellow color
+							framesquare[i].bg:SetTexture(color.r, color.g, color.b, color.a)
+							framesquare[i]:Show()
+						-- print("show deadzone")
+				elseif not BlizzFaderDB.enableSquare then
+					framesquare[i]:Hide()
+					else
+					
+							framesquare[i]:Hide()
+						-- print("hide else")
+				end
+					
+			end
+			
+		end
+                
 
             -- Determine if the player is friend and in range
             if (UnitExists(unit) and not UnitIsDead(unit) and not UnitIsDeadOrGhost(unit) and not UnitIsGhost(unit) and UnitIsConnected(unit) and UnitIsFriend("player", unit)) then
@@ -1596,7 +1671,28 @@ local function UpdateFrames()
     end
 end
 
+local squareFrame = {}
 
+
+
+for i = 1, 5 do 
+    squareFrame[i] = CreateFrame("Frame", nil, TargetFrame)
+    squareFrame[i]:SetWidth(32)
+    squareFrame[i]:SetHeight(32)
+
+    squareFrame[i].bg = squareFrame[i]:CreateTexture(nil, "ARTWORK")
+    squareFrame[i].border = squareFrame[i]:CreateTexture(nil, "BORDER")
+
+    squareFrame[i].bg:SetAllPoints()
+    squareFrame[i].bg:SetTexture(1)
+
+    squareFrame[i].border:SetPoint("CENTER")
+    squareFrame[i].border:SetTexture(0, 0, 0, 1)
+    squareFrame[i].border:SetWidth(36)
+    squareFrame[i].border:SetHeight(36)
+    squareFrame[i]:SetPoint("LEFT", TargetFrame, "RIGHT")
+    squareFrame[i]:Hide()
+end
 local function OnUpdate(self, elapsed)
     partyTimer = partyTimer + elapsed
     if partyTimer > 0.1 then
@@ -1604,6 +1700,9 @@ local function OnUpdate(self, elapsed)
         GetFrames()
         UpdateFrames()
     end
+        
+        
+    
 end
 
 local function OnEvent(self, event, ...)
@@ -1636,8 +1735,9 @@ elseif event == "PLAYER_TARGET_CHANGED" then
     end
 end
 
-local frame = CreateFrame("Frame")
-frame:RegisterEvent("PLAYER_ENTERING_WORLD")
-frame:RegisterEvent("PARTY_MEMBERS_CHANGED")
-frame:RegisterEvent("PLAYER_TARGET_CHANGED")
-frame:SetScript("OnEvent", OnEvent)
+local f = CreateFrame("Frame")
+f:RegisterEvent("PLAYER_ENTERING_WORLD")
+f:RegisterEvent("PARTY_MEMBERS_CHANGED")
+f:RegisterEvent("PLAYER_TARGET_CHANGED")
+f:SetScript("OnEvent", OnEvent)
+f:SetScript("OnUpdate", OnUpdate)
