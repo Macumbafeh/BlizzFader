@@ -1,5 +1,6 @@
 local ADDON_NAME = "BlizzFader"
 local ADDON_VERSION = 1
+local ADDON_FRAME_NAME = "BlizzFaderFrame"
 
 -- Default BlizzFaderDB
 local defaultBlizzFaderDB = {
@@ -7,6 +8,9 @@ local defaultBlizzFaderDB = {
 	enableRedBorder = true,
 	enableDeadzoneHighlight = true,
 	enableSquare = false,
+	FramesquareSize = 32,
+	FramesquareX = 140,
+	FramesquareY = 0,
 	DisableEnemySpells = false,
 	DruidEnemy = 2,
 	ShamanEnemy = 1,
@@ -32,6 +36,89 @@ local defaultBlizzFaderDB = {
 
 -- Saved variables
 BlizzFaderDB = BlizzFaderDB or {}
+
+local framesquare = CreateFrame("Frame", nil, TargetFrame)
+framesquare:SetWidth(36)  -- Set the initial square width
+framesquare:SetHeight(36) -- Set the initial square height
+
+framesquare.bg = framesquare:CreateTexture(nil, "ARTWORK")
+framesquare.border = framesquare:CreateTexture(nil, "BORDER")
+
+framesquare.bg:SetAllPoints()
+framesquare.bg:SetTexture(1)
+
+framesquare.border:SetPoint("CENTER")
+framesquare.border:SetTexture(0, 0, 0, 1)
+framesquare.border:SetWidth(36)
+framesquare.border:SetHeight(36)
+framesquare:SetPoint("CENTER", TargetFrame, "CENTER", BlizzFaderDB.FramesquareX, BlizzFaderDB.FramesquareY)
+framesquare:Hide()
+
+
+
+local function UpdateSquareSize()
+    local squareSize = BlizzFaderDB.FramesquareSize or defaultBlizzFaderDB.FramesquareSize
+    framesquare:SetWidth(squareSize)
+    framesquare:SetHeight(squareSize)
+	framesquare.border:SetWidth(squareSize + 4)
+    framesquare.border:SetHeight(squareSize + 4)
+end
+
+local function UpdateSquarePosition()
+    local squareX = BlizzFaderDB.FramesquareX or defaultBlizzFaderDB.FramesquareX
+    local squareY = BlizzFaderDB.FramesquareY or defaultBlizzFaderDB.FramesquareY
+    framesquare:SetPoint("CENTER", TargetFrame, "CENTER", squareX, squareY)
+end
+
+local function InitializeSquareSizeAndPosition()
+    if not BlizzFaderDB.FramesquareSize then
+        BlizzFaderDB.FramesquareSize = defaultBlizzFaderDB.FramesquareSize
+    end
+    if not BlizzFaderDB.FramesquareX then
+        BlizzFaderDB.FramesquareX = defaultBlizzFaderDB.FramesquareX
+    end
+    if not BlizzFaderDB.FramesquareY then
+        BlizzFaderDB.FramesquareY = defaultBlizzFaderDB.FramesquareY
+    end
+    UpdateSquareSize()
+    UpdateSquarePosition()
+end
+
+local function UpdateSquareSizeOption(_, value)
+    BlizzFaderDB.FramesquareSize = value
+    UpdateSquareSize()
+end
+
+local function UpdateSquarePositionOptionX(_, value)
+    BlizzFaderDB.FramesquareX = value
+    UpdateSquarePosition()
+end
+
+local function UpdateSquarePositionOptionY(_, value)
+    BlizzFaderDB.FramesquareY = value
+    UpdateSquarePosition()
+end
+
+-- Register for the ADDON_LOADED event to initialize square position after the addon is loaded
+local function OnAddonLoaded(event, addon)
+    if addon == "BlizzFader" then
+        InitializeSquareSizeAndPosition()
+        -- Unregister the event once initialization is done
+        _G.frame:UnregisterEvent("ADDON_LOADED")
+    end
+end
+
+-- Register the events
+_G.frame = CreateFrame("Frame")
+_G.frame:RegisterEvent("ADDON_LOADED")
+_G.frame:RegisterEvent("PLAYER_LOGOUT")
+_G.frame:SetScript("OnEvent", function(self, event, ...)
+    if event == "ADDON_LOADED" then
+        OnAddonLoaded(event, ...)
+    elseif event == "PLAYER_LOGOUT" then
+        OnPlayerLogout()
+    end
+end)
 
 local function HighlightDebug()
 local queryitem = {8149, 24268, 34368, 21991, 21519, 32321};
@@ -218,6 +305,49 @@ enableSquare = {
 			BlizzFaderDB.enableSquare = value
           end,
 },
+
+
+FramesquareSize = {
+    type = "range",
+    name = "Square Size",
+    desc = "Set the size of the square",
+    order = 7,
+    min = 10,
+    max = 100,
+    step = 1,
+    get = function()
+        
+        return BlizzFaderDB.FramesquareSize
+    end,
+    set = UpdateSquareSizeOption,
+    
+},
+
+FramesquareX = {
+	type = "range",
+        name = "Square X Position",
+        desc = "Set the X position of the square",
+        min = -2000,
+        max = 2000,
+        step = 10,
+        get = function()
+            return BlizzFaderDB.FramesquareX
+        end,
+        set = UpdateSquarePositionOptionX,
+    },
+
+FramesquareY = {
+	type = "range",
+        name = "Square Y Position",
+        desc = "Set the Y position of the square",
+        min = -2000,
+        max = 2000,
+        step = 10,
+        get = function()
+            return BlizzFaderDB.FramesquareY
+        end,
+        set = UpdateSquarePositionOptionY,
+    },
 },
 },		 
 	RangeEnemy = {
@@ -963,27 +1093,14 @@ local function GetFrames()
     frameCount = #frameList
 end
 
-local framesquare = {}	
-				for i = 1, 5 do 
-						framesquare[i] = CreateFrame("Frame", nil, TargetFrame)
-						framesquare[i]:SetWidth(32)
-						framesquare[i]:SetHeight(32)
 
-						framesquare[i].bg = framesquare[i]:CreateTexture(nil, "ARTWORK")
-						framesquare[i].border = framesquare[i]:CreateTexture(nil, "BORDER")
+	
 
-						framesquare[i].bg:SetAllPoints()
-						framesquare[i].bg:SetTexture(1)
 
-						framesquare[i].border:SetPoint("CENTER")
-						framesquare[i].border:SetTexture(0, 0, 0, 1)
-						framesquare[i].border:SetWidth(36)
-						framesquare[i].border:SetHeight(36)
-						framesquare[i]:SetPoint("LEFT", TargetFrame, "RIGHT")
-						framesquare[i]:Hide()
-						-- print("hide")
-						end	
-						
+	
+		
+				
+	
 -- Update frames
 local function UpdateFrames()
     for i = 1, frameCount do
@@ -1443,16 +1560,15 @@ local function UpdateFrames()
 				
 				-- Check if within deadzone range (5-8m)
 				if IsItemInRange(32321, unit) == 1 then
-						inDeadzone = true
-                    end
+					inDeadzone = true
+                end
 				
                 -- Fade out the frame if the player is out of range
                 if not inRange and not BlizzFaderDB.DisableEnemySpells then
                     frame:SetAlpha(BlizzFaderDB.opacity)
 					TargetFrameFlash:Hide();
+					framesquare:Hide()	
 					-- print("hide range")
-						framesquare[i]:Hide()
-						
                 else
                     -- Fade in the frame if the player is in range
                     if frame:GetAlpha() < 0.91 then
@@ -1461,47 +1577,34 @@ local function UpdateFrames()
 				
 				-- Add a red border if in melee range
 				if (inMeleeRange and BlizzFaderDB.enableRedBorder)  then
-
 					local color = BlizzFaderDB.redBorderColor or { r = 1, g = 0, b = 0, a = 1 } -- Default red color
 					
 					TargetFrameFlash:SetVertexColor(color.r, color.g, color.b, color.a)
 					TargetFrameFlash:Show();
-				
 					
 				elseif inDeadzone and BlizzFaderDB.enableDeadzoneHighlight and not inMeleeRange then
+					local color = BlizzFaderDB.yellowBorderColor or { r = 1, g = 1, b = 0, a = 1 } -- Default yellow color
 
-				local color = BlizzFaderDB.yellowBorderColor or { r = 1, g = 1, b = 0, a = 1 } -- Default yellow color
-					
-					
 					TargetFrameFlash:SetVertexColor(color.r, color.g, color.b, color.a)
 					TargetFrameFlash:Show()
-				
-					
-
-						
-				
-				else
-					
-							
+				else		
 					TargetFrameFlash:Hide();
 				end
 				
 				if (inMeleeRange and BlizzFaderDB.enableSquare)  then	
 					local color = BlizzFaderDB.redBorderColor or { r = 1, g = 0, b = 0, a = 1 } -- Default red color
-							framesquare[i].bg:SetTexture(color.r, color.g, color.b, color.a)
-							framesquare[i]:Show()
+					framesquare.bg:SetTexture(color.r, color.g, color.b, color.a)
+					framesquare:Show()
 						-- print("show melee")
 				elseif inDeadzone and BlizzFaderDB.enableSquare and not inMeleeRange then
-
-						local color = BlizzFaderDB.yellowBorderColor or { r = 1, g = 1, b = 0, a = 1 } -- Default yellow color
-							framesquare[i].bg:SetTexture(color.r, color.g, color.b, color.a)
-							framesquare[i]:Show()
+					local color = BlizzFaderDB.yellowBorderColor or { r = 1, g = 1, b = 0, a = 1 } -- Default yellow color
+					framesquare.bg:SetTexture(color.r, color.g, color.b, color.a)
+					framesquare:Show()
 						-- print("show deadzone")
 				elseif not BlizzFaderDB.enableSquare then
-					framesquare[i]:Hide()
-					else
-					
-							framesquare[i]:Hide()
+					framesquare:Hide()
+				else
+					framesquare:Hide()
 						-- print("hide else")
 				end
 					
@@ -1671,28 +1774,7 @@ local function UpdateFrames()
     end
 end
 
-local squareFrame = {}
 
-
-
-for i = 1, 5 do 
-    squareFrame[i] = CreateFrame("Frame", nil, TargetFrame)
-    squareFrame[i]:SetWidth(32)
-    squareFrame[i]:SetHeight(32)
-
-    squareFrame[i].bg = squareFrame[i]:CreateTexture(nil, "ARTWORK")
-    squareFrame[i].border = squareFrame[i]:CreateTexture(nil, "BORDER")
-
-    squareFrame[i].bg:SetAllPoints()
-    squareFrame[i].bg:SetTexture(1)
-
-    squareFrame[i].border:SetPoint("CENTER")
-    squareFrame[i].border:SetTexture(0, 0, 0, 1)
-    squareFrame[i].border:SetWidth(36)
-    squareFrame[i].border:SetHeight(36)
-    squareFrame[i]:SetPoint("LEFT", TargetFrame, "RIGHT")
-    squareFrame[i]:Hide()
-end
 local function OnUpdate(self, elapsed)
     partyTimer = partyTimer + elapsed
     if partyTimer > 0.1 then
@@ -1709,6 +1791,9 @@ local function OnEvent(self, event, ...)
     --===== Check if BlizzFaderDB is empty, if yes then initialize deafults. =====--
     if event == "PLAYER_ENTERING_WORLD" then
         if not BlizzFaderDB.opacity then
+            BlizzFaderDB = defaultBlizzFaderDB 
+        end
+		if not BlizzFaderDB.FramesquareSize then
             BlizzFaderDB = defaultBlizzFaderDB 
         end
 		local queryitem = {8149, 24268, 34368, 21991, 21519, 32321};
@@ -1736,6 +1821,7 @@ elseif event == "PLAYER_TARGET_CHANGED" then
 end
 
 local f = CreateFrame("Frame")
+f:RegisterEvent("PLAYER_LOGIN")
 f:RegisterEvent("PLAYER_ENTERING_WORLD")
 f:RegisterEvent("PARTY_MEMBERS_CHANGED")
 f:RegisterEvent("PLAYER_TARGET_CHANGED")
