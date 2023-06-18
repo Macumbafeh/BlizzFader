@@ -198,7 +198,7 @@ local options = {
 	ColorEnemy = {
          type = "group",
          name = "Enemy target Range option",
-         order = 2,
+         order = 4,
 		 inline = true,
 		 width = "full",
          args = {
@@ -353,7 +353,7 @@ FramesquareY = {
 	RangeEnemy = {
          type = "group",
          name = "Enemy target Range option",
-         order = 3,
+         order = 2,
 		 inline = true,
 		 width = "full",
          args = {
@@ -711,7 +711,7 @@ FramesquareY = {
    RangeFriendly = {
          type = "group",
          name = "Friendly target and Party Range option",       
-         order = 4,
+         order = 3,
          width = "full",
 		 inline = true,
          args = {
@@ -1034,7 +1034,7 @@ FramesquareY = {
         StaticPopup_Show("CONFIRM_RELOADUI")
     end,
     order = 10,
-		}
+		},
 	  },
     },
   },
@@ -1092,14 +1092,7 @@ local function GetFrames()
     -- Update the frame count
     frameCount = #frameList
 end
-
-
-	
-
-
-	
 		
-				
 	
 -- Update frames
 local function UpdateFrames()
