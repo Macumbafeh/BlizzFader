@@ -53,7 +53,7 @@ Yellow Deadzone range indicator
 ![image](https://github.com/Macumbafeh/BlizzFader/assets/47739411/764799df-baca-4ed5-b43c-e57e542ae707)
 ![image](https://github.com/Macumbafeh/BlizzFader/assets/47739411/273d8749-661f-45b9-bfab-7ac4b77020b9)
 
-Square feature :
+## Square feature 
 ![image](https://github.com/Macumbafeh/BlizzFader/assets/47739411/959e613f-f069-4d38-a8ec-608db606bc2d)
 ![image](https://github.com/Macumbafeh/BlizzFader/assets/47739411/a04f6153-4c47-4379-a275-5e013f7073e6)
 ![image](https://github.com/Macumbafeh/BlizzFader/assets/47739411/2652f506-6d69-412e-98cc-16dbe43f73fb)
