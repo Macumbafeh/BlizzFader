@@ -149,7 +149,7 @@ local options = {
 	   
 	   opacityframe = {
          type = "group",
-         name = "Frame Options",
+         name = "Options",
          inline = true,
          order = 1,
         width = "full",
@@ -1050,7 +1050,7 @@ end
 SLASH_BLIZZFADER1 = "/blizzfader"
 SLASH_BLIZZFADER2 = "/bf"
 SlashCmdList["BLIZZFADER"] = function()
-    InterfaceOptionsFrame_OpenToFrame(ADDON_NAME)
+    InterfaceOptionsFrame_OpenToCategory(ADDON_NAME)
 end
 
 -- Call function to register options
@@ -1789,6 +1789,7 @@ local function OnEvent(self, event, ...)
 		if not BlizzFaderDB.FramesquareSize then
             BlizzFaderDB = defaultBlizzFaderDB 
         end
+		-- /dump IsItemInRange(8149, "target")
 		local queryitem = {8149, 24268, 34368, 21991, 21519, 32321};
 	if (queryitem) and (queryitem ~= nil) and (queryitem ~= "") and (queryitem ~= 0) then
     for i, itemID in ipairs(queryitem) do

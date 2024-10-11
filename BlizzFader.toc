@@ -1,4 +1,4 @@
-## Interface: 20400
+## Interface: 30300
 ## Title: Blizz Fader
 ## Notes: Fade out/in the Party and TargetFrame when out of range based on your spells
 ## Author: Pixol modified by Macumba
