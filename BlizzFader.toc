@@ -2,7 +2,7 @@
 ## Title: Blizz Fader
 ## Notes: Fade out/in the Party and TargetFrame when out of range based on your spells
 ## Author: Pixol modified by Macumba
-## Version 1.1
+## Version 1.2
 ## SavedVariablesPerCharacter: BlizzFaderDB
 
 embeds.xml

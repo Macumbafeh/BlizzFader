@@ -8,6 +8,7 @@ local defaultBlizzFaderDB = {
 	enableRedBorder = true,
 	enableDeadzoneHighlight = true,
 	enableSquare = false,
+	DisableThreatFeature = false,
 	FramesquareSize = 32,
 	FramesquareX = 140,
 	FramesquareY = 0,
@@ -133,7 +134,7 @@ end
 end
 
 local function resetred()
-    BlizzFaderDB.redBorderColor = { r = 1, g = 0, b = 0, a = 1 } -- Default red color
+    BlizzFaderDB.redBorderColor = { r = 1, g = 0, b = 1, a = 1 } -- Default red color
 end
 
 local function resetyellow()
@@ -226,7 +227,7 @@ redBorderColor = {
     desc = "Set the color of the Melee border",
     order = 1,
     get = function()
-        local color = BlizzFaderDB.redBorderColor or { r = 1, g = 0, b = 0, a = 1 } -- Default red color
+        local color = BlizzFaderDB.redBorderColor or { r = 1, g = 0, b = 1, a = 1 } -- Default red color
         return color.r, color.g, color.b, color.a
     end,
     set = function(_, r, g, b, a)
@@ -289,11 +290,26 @@ resetButton2 = {
         func = resetyellow,
     },
 	
+ThreatFeatureToggle = {
+    type = "toggle",
+    name = "Disable Threat Feature",
+    desc = "Disable Blizzard's default threat highlighting on targets",
+    order = 6,
+    get = function()
+        if BlizzFaderDB.DisableThreatFeature == nil then
+            BlizzFaderDB.DisableThreatFeature = defaultBlizzFaderDB.DisableThreatFeature
+        end
+        return BlizzFaderDB.DisableThreatFeature
+    end,
+    set = function(_, value)
+        BlizzFaderDB.DisableThreatFeature = value
+    end,
+},
 enableSquare = {
     type = "toggle",
     name = "Enable Square",
     desc = "Toggle Square to replace the yellow/red border around the frame",
-    order = 6,
+    order = 7,
     width = "full",
     get = function()
 			if BlizzFaderDB.enableSquare == nil then
@@ -311,7 +327,7 @@ FramesquareSize = {
     type = "range",
     name = "Square Size",
     desc = "Set the size of the square",
-    order = 7,
+    order = 8,
     min = 10,
     max = 100,
     step = 1,
@@ -1050,7 +1066,7 @@ end
 SLASH_BLIZZFADER1 = "/blizzfader"
 SLASH_BLIZZFADER2 = "/bf"
 SlashCmdList["BLIZZFADER"] = function()
-    InterfaceOptionsFrame_OpenToCategory(ADDON_NAME)
+    InterfaceOptionsFrame_OpenToFrame(ADDON_NAME)
 end
 
 -- Call function to register options
@@ -1556,53 +1572,94 @@ local function UpdateFrames()
 					inDeadzone = true
                 end
 				
-                -- Fade out the frame if the player is out of range
-                if not inRange and not BlizzFaderDB.DisableEnemySpells then
-                    frame:SetAlpha(BlizzFaderDB.opacity)
-					TargetFrameFlash:Hide();
-					framesquare:Hide()	
-					-- print("hide range")
+				-- Blizzard threat highlighting logic
+            if not BlizzFaderDB.DisableThreatFeature then
+                local threatStatus = UnitThreatSituation("player", unit)
+                if threatStatus then
+                    local r, g, b = GetThreatStatusColor(threatStatus)
+                    -- Example of applying threat highlight (modify based on your existing logic)
+                    TargetFrameFlash:SetVertexColor(r, g, b, 1)
+                    TargetFrameFlash:Show()
                 else
-                    -- Fade in the frame if the player is in range
-                    if frame:GetAlpha() < 0.91 then
-                        frame:SetAlpha(1)
-                    end
-				
-				-- Add a red border if in melee range
-				if (inMeleeRange and BlizzFaderDB.enableRedBorder)  then
-					local color = BlizzFaderDB.redBorderColor or { r = 1, g = 0, b = 0, a = 1 } -- Default red color
-					
-					TargetFrameFlash:SetVertexColor(color.r, color.g, color.b, color.a)
-					TargetFrameFlash:Show();
-					
-				elseif inDeadzone and BlizzFaderDB.enableDeadzoneHighlight and not inMeleeRange then
-					local color = BlizzFaderDB.yellowBorderColor or { r = 1, g = 1, b = 0, a = 1 } -- Default yellow color
-
-					TargetFrameFlash:SetVertexColor(color.r, color.g, color.b, color.a)
-					TargetFrameFlash:Show()
-				else		
-					TargetFrameFlash:Hide();
-				end
-				
-				if (inMeleeRange and BlizzFaderDB.enableSquare)  then	
-					local color = BlizzFaderDB.redBorderColor or { r = 1, g = 0, b = 0, a = 1 } -- Default red color
-					framesquare.bg:SetTexture(color.r, color.g, color.b, color.a)
-					framesquare:Show()
-						-- print("show melee")
-				elseif inDeadzone and BlizzFaderDB.enableSquare and not inMeleeRange then
-					local color = BlizzFaderDB.yellowBorderColor or { r = 1, g = 1, b = 0, a = 1 } -- Default yellow color
-					framesquare.bg:SetTexture(color.r, color.g, color.b, color.a)
-					framesquare:Show()
-						-- print("show deadzone")
-				elseif not BlizzFaderDB.enableSquare then
-					framesquare:Hide()
-				else
-					framesquare:Hide()
-						-- print("hide else")
-				end
-					
-			end
+                    -- Hide threat highlighting if not applicable
+                    TargetFrameFlash:Hide()
+                end
+            else
+                -- Ensure threat highlighting is hidden when disabled
+                TargetFrameFlash:Hide()
+            end
 			
+                -- Fade out the frame if the player is out of range
+                -- Initialize state tracking variables
+				TargetFrameFlash.isVisible = false
+				framesquare.isVisible = false
+
+				-- Update the target frame and highlight states
+				if not inRange and not BlizzFaderDB.DisableEnemySpells then
+					if frame:GetAlpha() ~= BlizzFaderDB.opacity then
+						frame:SetAlpha(BlizzFaderDB.opacity)
+					end
+
+				-- Hide TargetFrameFlash and framesquare only if they are currently visible
+					if TargetFrameFlash.isVisible then
+						TargetFrameFlash:Hide()
+						TargetFrameFlash.isVisible = false
+					end
+
+					if framesquare.isVisible then
+						framesquare:Hide()
+						framesquare.isVisible = false
+					end
+				else
+					-- Fade in the frame if the player is in range
+					if frame:GetAlpha() < 0.91 then
+						frame:SetAlpha(1)
+					end
+
+					-- Add a red border if in melee range
+					if inMeleeRange and BlizzFaderDB.enableRedBorder then
+						local color = BlizzFaderDB.redBorderColor or { r = 1, g = 0, b = 1, a = 1 } -- Default red color
+						TargetFrameFlash:SetVertexColor(color.r, color.g, color.b, color.a)
+						if not TargetFrameFlash.isVisible then
+							TargetFrameFlash:Show()
+							TargetFrameFlash.isVisible = true
+						end
+					elseif inDeadzone and BlizzFaderDB.enableDeadzoneHighlight and not inMeleeRange then
+						local color = BlizzFaderDB.yellowBorderColor or { r = 1, g = 1, b = 0, a = 1 } -- Default yellow color
+						TargetFrameFlash:SetVertexColor(color.r, color.g, color.b, color.a)
+						if not TargetFrameFlash.isVisible then
+							TargetFrameFlash:Show()
+							TargetFrameFlash.isVisible = true
+						end
+					else
+						if TargetFrameFlash.isVisible then
+							TargetFrameFlash:Hide()
+							TargetFrameFlash.isVisible = false
+						end
+					end
+
+					-- Handle square visibility for melee and deadzone highlights
+					if inMeleeRange and BlizzFaderDB.enableSquare then
+						local color = BlizzFaderDB.redBorderColor or { r = 1, g = 0, b = 1, a = 1 } -- Default red color
+						framesquare.bg:SetTexture(color.r, color.g, color.b, color.a)
+						if not framesquare.isVisible then
+							framesquare:Show()
+							framesquare.isVisible = true
+						end
+					elseif inDeadzone and BlizzFaderDB.enableSquare and not inMeleeRange then
+						local color = BlizzFaderDB.yellowBorderColor or { r = 1, g = 1, b = 0, a = 1 } -- Default yellow color
+						framesquare.bg:SetTexture(color.r, color.g, color.b, color.a)
+						if not framesquare.isVisible then
+							framesquare:Show()
+							framesquare.isVisible = true
+						end
+					else
+						if framesquare.isVisible then
+							framesquare:Hide()
+							framesquare.isVisible = false
+						end
+					end
+				end	
 		end
                 
 
@@ -1770,7 +1827,7 @@ end
 
 local function OnUpdate(self, elapsed)
     partyTimer = partyTimer + elapsed
-    if partyTimer > 0.1 then
+    if partyTimer > 0.01 then
         partyTimer = 0
         GetFrames()
         UpdateFrames()
