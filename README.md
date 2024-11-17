@@ -20,8 +20,11 @@ There is a GUI in interface - Option, or you can access it with "/bf" or "/blizz
 - Disable the Fade out for Friendly Target / Party
 - A button to Reload the UI (not necessary but if you have a bug with the addon it can help)
 
+On 3.3.5 i added a button to disable blizzard's highlight threat on target
+
 ![image](https://github.com/Macumbafeh/BlizzFader/assets/47739411/c08308c2-8989-45c2-a8ec-c0e49f76baa7)
 ![image](https://github.com/Macumbafeh/BlizzFader/assets/47739411/b13fd5ca-c1c7-4547-9168-2b5ab2bde054)
+![image](https://github.com/user-attachments/assets/cf170177-4577-4809-8e90-a45ac1aed67b)
 
 
 # Screen
