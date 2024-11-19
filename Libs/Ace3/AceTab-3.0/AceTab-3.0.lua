@@ -1,9 +1,15 @@
---[[ $Id: AceTab-3.0.lua 81396 2008-09-05 12:14:21Z ammo $ ]]
+--- AceTab-3.0 provides support for tab-completion.
+-- Note: This library is not yet finalized.
+-- @class file
+-- @name AceTab-3.0
+-- @release $Id: AceTab-3.0.lua 947 2010-06-29 16:44:48Z nevcairiel $
 
-local ACETAB_MAJOR, ACETAB_MINOR = 'AceTab-3.0', 3
+local ACETAB_MAJOR, ACETAB_MINOR = 'AceTab-3.0', 8
 local AceTab, oldminor = LibStub:NewLibrary(ACETAB_MAJOR, ACETAB_MINOR)
 
 if not AceTab then return end -- No upgrade needed
+
+local is335 = GetBuildInfo() >= "3.3.5"
 
 AceTab.registry = AceTab.registry or {}
 
@@ -32,11 +38,11 @@ end
 local function hookFrame(f)
 	if f.hookedByAceTab3 then return end
 	f.hookedByAceTab3 = true
-	if f == ChatFrameEditBox then
+	if f == (is335 and ChatEdit_GetActiveWindow() or ChatFrameEditBox) then
 		local origCTP = ChatEdit_CustomTabPressed
-		function ChatEdit_CustomTabPressed()
+		function ChatEdit_CustomTabPressed(...)
 			if AceTab:OnTabPressed(f) then
-				return origCTP()
+				return origCTP(...)
 			else
 				return true
 			end
@@ -46,9 +52,9 @@ local function hookFrame(f)
 		if type(origOTP) ~= 'function' then
 			origOTP = function() end
 		end
-		f:SetScript('OnTabPressed', function()
+		f:SetScript('OnTabPressed', function(...)
 			if AceTab:OnTabPressed(f) then
-				return origOTP()
+				return origOTP(...)
 			end
 		end)
 	end
@@ -60,7 +66,7 @@ local firstPMLength
 
 local fallbacks, notfallbacks = {}, {}  -- classifies completions into those which have preconditions and those which do not.  Those without preconditions are only considered if no other completions have matches.
 local pmolengths = {}  -- holds the number of characters to overwrite according to pmoverwrite and the current prematch
---------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------
 -- RegisterTabCompletion( descriptor, prematches, wordlist, usagefunc, listenframes, postfunc, pmoverwrite )
 -- See http://www.wowace.com/wiki/AceTab-2.0 for detailed API documentation
 --
@@ -85,7 +91,7 @@ local pmolengths = {}  -- holds the number of characters to overwrite according 
 --										This is useful when you want to use the prematch as an indicator character, but ultimately do not want it as part of the text, itself.
 --
 -- no return
---------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------
 function AceTab:RegisterTabCompletion(descriptor, prematches, wordlist, usagefunc, listenframes, postfunc, pmoverwrite)
 	-- Arg checks
 	if type(descriptor) ~= 'string' then error("Usage: RegisterTabCompletion(descriptor, prematches, wordlist, usagefunc, listenframes, postfunc, pmoverwrite): 'descriptor' - string expected.", 3) end
@@ -113,8 +119,15 @@ function AceTab:RegisterTabCompletion(descriptor, prematches, wordlist, usagefun
 
 	-- Make listenframes into a one-element table if it was not passed a table of frames.
 	if not listenframes then  -- default
-		listenframes = { ChatFrameEditBox }
-	elseif type(listenframes) ~= 'table' or type(listenframes[0]) == 'userdata' and type(listenframes.IsFrameType) == 'function' then  -- single frame or framename
+		if is335 then
+			listenframes = {}
+			for i = 1, NUM_CHAT_WINDOWS do
+				listenframes[i] = _G["ChatFrame"..i.."EditBox"]
+			end
+		else
+			listenframes = { ChatFrameEditBox }
+		end
+	elseif type(listenframes) ~= 'table' or type(listenframes[0]) == 'userdata' and type(listenframes.IsObjectType) == 'function' then  -- single frame or framename
 		listenframes = { listenframes }
 	end
 	
@@ -123,12 +136,12 @@ function AceTab:RegisterTabCompletion(descriptor, prematches, wordlist, usagefun
 		if type(f) == 'string' then
 			f = _G[f]
 		end
-		if type(f) ~= 'table' or type(f[0]) ~= 'userdata' or type(f.IsFrameType) ~= 'function' then
-			self:error("Cannot register frame %q; it does not exist", f:GetName())
+		if type(f) ~= 'table' or type(f[0]) ~= 'userdata' or type(f.IsObjectType) ~= 'function' then
+			error(format(ACETAB_MAJOR..": Cannot register frame %q; it does not exist", f:GetName()))
 		end
 		if f then
-			if f:GetFrameType() ~= 'EditBox' then
-				self:error("Cannot register frame %q; it is not an EditBox", f:GetName())
+			if f:GetObjectType() ~= 'EditBox' then
+				error(format(ACETAB_MAJOR..": Cannot register frame %q; it is not an EditBox", f:GetName()))
 			else
 				hookFrame(f)
 			end
@@ -152,7 +165,7 @@ function AceTab:UnregisterTabCompletion(descriptor)
 	notfallbacks[descriptor] = nil
 end
 
---------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------
 -- gcbs( s1, s2 )
 --
 -- s1		string		First string to be compared
@@ -160,7 +173,7 @@ end
 -- s2		string		Second string to be compared
 --
 -- returns the greatest common substring beginning s1 and s2
---------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------
 local function gcbs(s1, s2)
 	if not s1 and not s2 then return end
 	if not s1 then s1 = s2 end
@@ -176,12 +189,12 @@ local function gcbs(s1, s2)
 end
 
 local cursor  -- Holds cursor position.  Set in :OnTabPressed().
---------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------
 -- cycleTab()
 -- For when a tab press has multiple possible completions, we need to allow the user to press tab repeatedly to cycle through them.
 -- If we have multiple possible completions, all tab presses after the first will call this function to cycle through and insert the different possible matches.
 -- This function will stop being called after OnTextChanged() is triggered by something other than AceTab (i.e. the user inputs a character).
---------------------------------------------------------------------------------
+-- ------------------------------------------------------------------------------
 local previousLength, cMatch, matched, postmatch
 local function cycleTab(this)
 	cMatch = 0  -- Counter across all sets.  The pseudo-index relevant to this value and corresponding to the current match is held in this.at3curMatch
@@ -307,7 +320,7 @@ function AceTab:OnTabPressed(this)
 	if this:GetText() == '' then return true end
 
 	-- allow Blizzard to handle slash commands, themselves
-	if this == ChatFrameEditBox then
+	if this == (is335 and ChatEdit_GetActiveWindow() or ChatFrameEditBox) then
 		local command = this:GetText()
 		if strfind(command, "^/[%a%d_]+$") then
 			return true

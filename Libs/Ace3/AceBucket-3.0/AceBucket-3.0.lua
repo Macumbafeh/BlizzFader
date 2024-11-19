@@ -1,13 +1,40 @@
---[[ $Id: AceBucket-3.0.lua 609 2008-03-26 08:48:54Z nevcairiel $ ]]
-
---[[
-	This Bucket implementation works as follows:
-	-- Initially, no schedule is running, and its waiting for the first event to happen.
-	-- The first event will start the bucket, and get the scheduler running, which will collect all
-		events in the given interval. When that interval is reached, the bucket is pushed to the 
-		callback and a new schedule is started. When a bucket is empty after its interval, the scheduler is 
-		stopped, and the bucket is only listening for the next event to happen, basicly back in initial state.
-]]
+--- A bucket to catch events in. **AceBucket-3.0** provides throttling of events that fire in bursts and
+-- your addon only needs to know about the full burst.
+-- 
+-- This Bucket implementation works as follows:\\
+--   Initially, no schedule is running, and its waiting for the first event to happen.\\
+--   The first event will start the bucket, and get the scheduler running, which will collect all
+--   events in the given interval. When that interval is reached, the bucket is pushed to the 
+--   callback and a new schedule is started. When a bucket is empty after its interval, the scheduler is 
+--   stopped, and the bucket is only listening for the next event to happen, basically back in its initial state.
+-- 
+-- In addition, the buckets collect information about the "arg1" argument of the events that fire, and pass those as a 
+-- table to your callback. This functionality was mostly designed for the UNIT_* events.\\
+-- The table will have the different values of "arg1" as keys, and the number of occurances as their value, e.g.\\
+--   { ["player"] = 2, ["target"] = 1, ["party1"] = 1 }
+--
+-- **AceBucket-3.0** can be embeded into your addon, either explicitly by calling AceBucket:Embed(MyAddon) or by 
+-- specifying it as an embeded library in your AceAddon. All functions will be available on your addon object
+-- and can be accessed directly, without having to explicitly call AceBucket itself.\\
+-- It is recommended to embed AceBucket, otherwise you'll have to specify a custom `self` on all calls you
+-- make into AceBucket.
+-- @usage
+-- MyAddon = LibStub("AceAddon-3.0"):NewAddon("BucketExample", "AceBucket-3.0")
+-- 
+-- function MyAddon:OnEnable()
+--   -- Register a bucket that listens to all the HP related events, 
+--   -- and fires once per second
+--   self:RegisterBucketEvent({"UNIT_HEALTH", "UNIT_MAXHEALTH"}, 1, "UpdateHealth")
+-- end
+--
+-- function MyAddon:UpdateHealth(units)
+--   if units.player then
+--     print("Your HP changed!")
+--   end
+-- end
+-- @class file
+-- @name AceBucket-3.0.lua
+-- @release $Id: AceBucket-3.0.lua 895 2009-12-06 16:28:55Z nevcairiel $
 
 local MAJOR, MINOR = "AceBucket-3.0", 3
 local AceBucket, oldminor = LibStub:NewLibrary(MAJOR, MINOR)
@@ -20,13 +47,15 @@ AceBucket.embeds = AceBucket.embeds or {}
 -- the libraries will be lazyly bound later, to avoid errors due to loading order issues
 local AceEvent, AceTimer
 
--- local upvalues
-local type = type
-local next = next
-local pairs = pairs
-local select = select
-local tonumber = tonumber
-local tostring = tostring
+-- Lua APIs
+local tconcat = table.concat
+local type, next, pairs, select = type, next, pairs, select
+local tonumber, tostring, rawset = tonumber, tostring, rawset
+local assert, loadstring, error = assert, loadstring, error
+
+-- Global vars/functions that we don't upvalue since they might get hooked, or upgraded
+-- List them here for Mikk's FindGlobals script
+-- GLOBALS: LibStub, geterrorhandler
 
 local bucketCache = setmetatable({}, {__mode='k'})
 
@@ -57,7 +86,7 @@ local function CreateDispatcher(argCount)
 	
 	local ARGS = {}
 	for i = 1, argCount do ARGS[i] = "arg"..i end
-	code = code:gsub("ARGS", table.concat(ARGS, ", "))
+	code = code:gsub("ARGS", tconcat(ARGS, ", "))
 	return assert(loadstring(code, "safecall Dispatcher["..argCount.."]"))(xpcall, errorhandler)
 end
 
@@ -169,24 +198,40 @@ local function RegisterBucket(self, event, interval, callback, isMessage)
 	return handle
 end
 
--- AceBucket:RegisterBucketEvent(event, interval, callback)
--- AceBucket:RegisterBucketMessage(message, interval, callback)
---
--- event/message(string or table) -  the event, or a table with the events, that this bucket listens to
--- interval(int) - time between bucket fireings
--- callback(func or string) - function pointer, or method name of the object, that gets called when the bucket is cleared
+--- Register a Bucket for an event (or a set of events)
+-- @param event The event to listen for, or a table of events.
+-- @param interval The Bucket interval (burst interval)
+-- @param callback The callback function, either as a function reference, or a string pointing to a method of the addon object.
+-- @return The handle of the bucket (for unregistering)
+-- @usage
+-- MyAddon = LibStub("AceAddon-3.0"):NewAddon("MyAddon", "AceBucket-3.0")
+-- MyAddon:RegisterBucketEvent("BAG_UPDATE", 0.2, "UpdateBags")
+-- 
+-- function MyAddon:UpdateBags()
+--   -- do stuff
+-- end
 function AceBucket:RegisterBucketEvent(event, interval, callback)
 	return RegisterBucket(self, event, interval, callback, false)
 end
 
+--- Register a Bucket for an AceEvent-3.0 addon message (or a set of messages)
+-- @param message The message to listen for, or a table of messages.
+-- @param interval The Bucket interval (burst interval)
+-- @param callback The callback function, either as a function reference, or a string pointing to a method of the addon object.
+-- @return The handle of the bucket (for unregistering)
+-- @usage
+-- MyAddon = LibStub("AceAddon-3.0"):NewAddon("MyAddon", "AceBucket-3.0")
+-- MyAddon:RegisterBucketEvent("SomeAddon_InformationMessage", 0.2, "ProcessData")
+-- 
+-- function MyAddon:ProcessData()
+--   -- do stuff
+-- end
 function AceBucket:RegisterBucketMessage(message, interval, callback)
 	return RegisterBucket(self, message, interval, callback, true)
 end
 
--- AceBucket:UnregisterBucket ( handle )
--- handle - the handle of the bucket as returned by RegisterBucket*
---
--- will unregister any events and messages from the bucket and clear any remaining data
+--- Unregister any events and messages from the bucket and clear any remaining data.
+-- @param handle The handle of the bucket as returned by RegisterBucket*
 function AceBucket:UnregisterBucket(handle)
 	local bucket = AceBucket.buckets[handle]
 	if bucket then
@@ -209,9 +254,7 @@ function AceBucket:UnregisterBucket(handle)
 	end
 end
 
--- AceBucket:UnregisterAllBuckets()
--- 
--- will unregister all bucketed events.
+--- Unregister all buckets of the current addon object (or custom "self").
 function AceBucket:UnregisterAllBuckets()
 	-- hmm can we do this more efficient? (it is not done often so shouldn't matter much)
 	for handle, bucket in pairs(AceBucket.buckets) do
@@ -223,8 +266,7 @@ end
 
 
 
---- embedding and embed handling
-
+-- embedding and embed handling
 local mixins = {
 	"RegisterBucketEvent",
 	"RegisterBucketMessage", 
@@ -232,10 +274,8 @@ local mixins = {
 	"UnregisterAllBuckets",
 } 
 
--- AceBucket:Embed( target )
--- target (object) - target object to embed AceBucket in
---
 -- Embeds AceBucket into the target object making the functions from the mixins list available on target:..
+-- @param target target object to embed AceBucket in
 function AceBucket:Embed( target )
 	for _, v in pairs( mixins ) do
 		target[v] = self[v]
@@ -244,10 +284,6 @@ function AceBucket:Embed( target )
 	return target
 end
 
---AceBucket:OnEmbedDisable( target )
--- target (object) - target object that AceBucket is embedded in.
---
--- Disables all buckets registered on the object
 function AceBucket:OnEmbedDisable( target )
 	target:UnregisterAllBuckets()
 end
