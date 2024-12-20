@@ -8,6 +8,7 @@ local defaultBlizzFaderDB = {
 	enableRedBorder = true,
 	enableDeadzoneHighlight = true,
 	enableSquare = false,
+	DisableCombatGlow = false,
 	DisableThreatFeature = false,
 	FramesquareSize = 32,
 	FramesquareX = 140,
@@ -104,6 +105,7 @@ end
 local function OnAddonLoaded(event, addon)
     if addon == "BlizzFader" then
         InitializeSquareSizeAndPosition()
+		PlayerFrame_UpdateStatus()
         -- Unregister the event once initialization is done
         _G.frame:UnregisterEvent("ADDON_LOADED")
     end
@@ -175,6 +177,24 @@ local options = {
                 BlizzFaderDB.opacity = value
             end
         },
+		CombatGlowToggle = {
+			type = "toggle",
+			name = "Disable PlayerFrame Combat Glow and other effect",
+			desc = "Disable the glowing effect on the player frame during combat or status changes",
+			order = 2,
+			width = "full",
+			get = function()
+				if BlizzFaderDB.DisableCombatGlow == nil then
+					BlizzFaderDB.DisableCombatGlow = defaultBlizzFaderDB.DisableCombatGlow
+				end
+				return BlizzFaderDB.DisableCombatGlow
+			end,
+			set = function(_, value)
+				BlizzFaderDB.DisableCombatGlow = value
+				PlayerFrame_UpdateStatus() -- Update the player frame status immediately
+			end,
+		},
+
 	},
 },
 
@@ -295,6 +315,7 @@ ThreatFeatureToggle = {
     name = "Disable Threat Feature",
     desc = "Disable Blizzard's default threat highlighting on targets",
     order = 6,
+	width = "full",
     get = function()
         if BlizzFaderDB.DisableThreatFeature == nil then
             BlizzFaderDB.DisableThreatFeature = defaultBlizzFaderDB.DisableThreatFeature
@@ -1081,6 +1102,73 @@ local frameCount = 0
 
 -- Timer
 local partyTimer = 0
+
+function PlayerFrame_UpdateStatus()
+
+
+    -- Original logic follows
+    if (UnitHasVehicleUI("player")) then
+        PlayerStatusTexture:Hide()
+        PlayerRestIcon:Hide()
+        PlayerAttackIcon:Hide()
+        PlayerRestGlow:Hide()
+        PlayerAttackGlow:Hide()
+        PlayerStatusGlow:Hide()
+        PlayerAttackBackground:Hide()
+    elseif (IsResting()) then
+		if not BlizzFaderDB.DisableCombatGlow then
+			PlayerStatusTexture:SetVertexColor(1.0, 0.88, 0.25, 1.0)
+			PlayerStatusTexture:Show()
+			PlayerRestIcon:Show()
+			PlayerAttackIcon:Hide()
+			PlayerRestGlow:Show()
+			PlayerAttackGlow:Hide()
+			PlayerStatusGlow:Show()
+			PlayerAttackBackground:Hide()
+		else
+			PlayerStatusTexture:SetVertexColor(1.0, 0.88, 0.25, 1.0)
+			PlayerStatusTexture:Hide()
+			PlayerRestIcon:Hide()
+			PlayerAttackIcon:Hide()
+			PlayerRestGlow:Hide()
+			PlayerAttackGlow:Hide()
+			PlayerStatusGlow:Hide()
+			PlayerAttackBackground:Hide()
+		end
+    elseif (PlayerFrame.inCombat) then
+		if not BlizzFaderDB.DisableCombatGlow then
+			PlayerStatusTexture:SetVertexColor(1.0, 0.0, 0.0, 1.0)
+			PlayerStatusTexture:Show()
+			PlayerAttackIcon:Show()
+			PlayerRestIcon:Hide()
+			PlayerAttackGlow:Show()
+			PlayerRestGlow:Hide()
+			PlayerStatusGlow:Show()
+			PlayerAttackBackground:Show()
+		else
+			PlayerStatusTexture:SetVertexColor(1.0, 0.0, 0.0, 1.0)
+			PlayerStatusTexture:Hide()
+			PlayerAttackIcon:Show()
+			PlayerRestIcon:Hide()
+			PlayerAttackGlow:Hide()
+			PlayerRestGlow:Hide()
+			PlayerStatusGlow:Show()
+			PlayerAttackBackground:Show()
+		end
+    elseif (PlayerFrame.onHateList) then
+        PlayerAttackIcon:Show()
+        PlayerRestIcon:Hide()
+        PlayerStatusGlow:Hide()
+        PlayerAttackBackground:Hide()
+    else
+        PlayerStatusTexture:Hide()
+        PlayerRestIcon:Hide()
+        PlayerAttackIcon:Hide()
+        PlayerStatusGlow:Hide()
+        PlayerAttackBackground:Hide()
+    end
+end
+
 
 -- Get frames
 local function GetFrames()
