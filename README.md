@@ -19,7 +19,6 @@ There is a GUI in interface - Option, or you can access it with "/bf" or "/blizz
 - Choose a Spell for the range of the fade out
 - Disable the Fade out for Friendly Target / Party
 - A button to Reload the UI (not necessary but if you have a bug with the addon it can help)
-- on 3.3.5 you can disable Threat highlight on Target Frame and Combat Statut highlight on Player Frame
 
 ![image](https://github.com/Macumbafeh/BlizzFader/assets/47739411/c08308c2-8989-45c2-a8ec-c0e49f76baa7)
 ![image](https://github.com/Macumbafeh/BlizzFader/assets/47739411/b13fd5ca-c1c7-4547-9168-2b5ab2bde054)
