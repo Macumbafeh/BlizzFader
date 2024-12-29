@@ -116,7 +116,7 @@ _G.frame:SetScript("OnEvent", function(self, event, ...)
     if event == "ADDON_LOADED" then
         OnAddonLoaded(event, ...)
     elseif event == "PLAYER_LOGOUT" then
-        OnPlayerLogout()
+       -- OnPlayerLogout()
     end
 end)
 
