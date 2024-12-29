@@ -1104,8 +1104,6 @@ local frameCount = 0
 local partyTimer = 0
 
 function PlayerFrame_UpdateStatus()
-
-
     -- Original logic follows
     if (UnitHasVehicleUI("player")) then
         PlayerStatusTexture:Hide()
@@ -1207,7 +1205,7 @@ local function UpdateFrames()
         if frame and unit then
 			
             -- Determine if the player is enemy and in range
-            if (UnitExists(unit) and not UnitIsDead(unit) and not UnitIsDeadOrGhost(unit) and not UnitIsGhost(unit) and UnitIsConnected(unit) and UnitCanAttack("player", unit)) then
+            if (UnitExists(unit) and not UnitIsDead(unit) and not UnitIsDeadOrGhost(unit) and not UnitIsGhost(unit) and UnitIsConnected(unit) and UnitIsVisible(unit) and UnitCanAttack("player", unit)) then
                 local inRange = true
 				local inMeleeRange = false
 				local inDeadzone = false
@@ -1752,7 +1750,7 @@ local function UpdateFrames()
                 
 
             -- Determine if the player is friend and in range
-            if (UnitExists(unit) and not UnitIsDead(unit) and not UnitIsDeadOrGhost(unit) and not UnitIsGhost(unit) and UnitIsConnected(unit) and UnitIsFriend("player", unit)) then
+            if (UnitExists(unit) and not UnitIsDead(unit) and not UnitIsDeadOrGhost(unit) and not UnitIsGhost(unit) and UnitIsConnected(unit) and UnitIsVisible(unit) and UnitIsFriend("player", unit)) then
                 local inRange = true
                 -- [DRUID]
                  if BlizzFaderDB.DruidFriendly == 1 and select(2, UnitClass("player")) == "DRUID" then 
@@ -1896,7 +1894,11 @@ local function UpdateFrames()
                         inRange = false
 					end			   			   
                 end
-			 
+				
+				if not UnitIsVisible(unit) then
+					inRange = false
+				end
+
                 -- Fade out the frame if the player is out of range
                 if not inRange and not BlizzFaderDB.DisableFriendlySpells then
                     frame:SetAlpha(BlizzFaderDB.opacity)
